@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "407241218753",
+    "project_id": "epic-pocket-wallpapers",
+    "storage_bucket": "epic-pocket-wallpapers.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:407241218753:android:53db33f1fb7e859b575240",
+        "android_client_info": {
+          "package_name": "com.app.pocketwallpaper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "407241218753-9o1lpeucuv72iauqlo8r6rt4k1api57t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmueCCRH93wVhrDn-j5xYEdElZtT-V-5E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "407241218753-9o1lpeucuv72iauqlo8r6rt4k1api57t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

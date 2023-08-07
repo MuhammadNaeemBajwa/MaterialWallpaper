@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/spinner_popup_background"
+    android:orientation="vertical"
+    android:padding="4dp">
+
+
+    <TextView
+        android:id="@+id/itemAll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_item_free"
+        android:text="@string/drop_down_item_all"
+        style="@style/FilterItem"
+        />
+    <TextView
+        android:id="@+id/itemFree"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_item_free"
+        android:text="@string/drop_down_item_free"
+        style="@style/FilterItem"
+        />
+
+    <TextView
+        android:id="@+id/itemPremium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/drop_down_item_premium"
+        style="@style/FilterItem"
+        />
+
+    <TextView
+        android:id="@+id/itemBuy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/drop_down_item_buy"
+        style="@style/ItemBuy"
+        />
+
+</LinearLayout>

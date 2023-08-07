@@ -1,0 +1,14 @@
+<com.skydoves.expandablelayout.ExpandableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/expandable"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:expandable_duration="200"
+    app:expandable_isExpanded="false"
+    app:expandable_parentLayout="@layout/premium_free_view"
+    app:expandable_showSpinner="true"
+    app:expandable_spinner_animate="true"
+    app:expandable_spinner_gravity="end"
+    app:expandable_spinner_margin="7dp"
+    app:expandable_spinner_size="32dp" />

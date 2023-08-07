@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_height="wrap_content">
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:padding="35dp"
+    android:background="@color/color_dialog_popup"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:layout_weight="1"
+        android:textSize="15sp"
+        android:text="@string/dialog_message_buy_premium" />
+
+    <com.app.materialwallpaper.view.ButtonStyle
+        android:id="@+id/btnLearnMore"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent" android:layout_gravity=""
+        android:layout_height="wrap_content"
+        android:text="@string/learn_more"
+        app:corner="30dp"
+        android:fontFamily="@font/sego_ui"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        app:normal_color="@color/color_light_primary"
+        app:press_color="@color/color_light_accent"
+        app:stroke_width="0dp"
+        android:textSize="17sp"
+
+        />
+
+    <com.app.materialwallpaper.view.ButtonStyle
+        android:id="@+id/btnCancel"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel"
+        app:corner="30dp"
+        android:textSize="17sp"
+        android:fontFamily="@font/sego_ui"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        app:normal_color="@color/color_dark_accent"
+        app:press_color="@color/color_dark_accent_pressed"
+        app:stroke_color="@color/color_light_primary"
+        app:stroke_width="0dp"/>
+</LinearLayout>
+</LinearLayout>

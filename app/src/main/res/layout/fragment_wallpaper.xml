@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+<!--    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
+<!--        android:id="@+id/swipe_refresh_layout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_weight="1"-->
+<!--        android:layout_height="0dp">-->
+
+        <RelativeLayout
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            >
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/grid_space_wallpaper"
+                android:scrollbars="none"
+                android:scrollingCache="true"
+                android:visibility="gone" />
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmer_view_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:shimmer_duration="1000">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/grid_space_wallpaper">
+
+                    <include
+                        android:id="@+id/view_shimmer_2_columns_square"
+                        layout="@layout/include_shimmer_2_columns_square"
+                        android:visibility="gone" />
+
+                    <include
+                        android:id="@+id/view_shimmer_3_columns_square"
+                        layout="@layout/include_shimmer_3_columns_square"
+                        android:visibility="gone" />
+
+                    <include
+                        android:id="@+id/view_shimmer_2_columns"
+                        layout="@layout/include_shimmer_2_columns"
+                        android:visibility="gone" />
+
+                    <include
+                        android:id="@+id/view_shimmer_3_columns"
+                        layout="@layout/include_shimmer_3_columns"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+
+            <include
+                android:id="@+id/lyt_no_item"
+                layout="@layout/include_no_item"
+                android:visibility="gone" />
+
+            <include
+                android:id="@+id/lyt_failed"
+                layout="@layout/include_failed"
+                android:visibility="gone" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:id="@+id/add_wallpaper"
+                app:tint="@android:color/white"
+
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="20dp"
+                android:backgroundTint="@color/color_light_primary"
+                android:src="@drawable/baseline_add_24"
+               >
+
+
+            </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+        </RelativeLayout>
+</LinearLayout>

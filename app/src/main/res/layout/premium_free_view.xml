@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/txtFilter"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/round_button"
+    android:padding="7dp"
+    android:paddingStart="15dp"
+    android:paddingEnd="25dp"
+    android:text="@string/drop_down_item_all"
+    android:textColor="@color/color_white"
+    android:textSize="15sp" />

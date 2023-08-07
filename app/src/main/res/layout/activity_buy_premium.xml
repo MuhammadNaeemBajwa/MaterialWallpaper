@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.BuyPremiumActivity">
+
+    <ImageView
+        android:id="@+id/imgWallpaper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_dark_accent"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/bg_splash" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/black_transparent_gradent"/>
+
+
+
+    <ImageView
+        android:id="@+id/imgClose"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:onClick="onCloseClicked"
+        android:padding="8dp"
+        app:srcCompat="@drawable/icon_close" />
+
+    <ImageView
+        android:id="@+id/lytAlreadyPurchased"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/txtBottom"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp" android:visibility="visible"
+        android:layout_marginBottom="30dp"
+        app:srcCompat="@drawable/already_purchased" />
+
+    <LinearLayout
+        android:id="@+id/lytPurchase"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/txtBottom"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/imgPrice"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="10dp"
+            app:srcCompat="@drawable/unlock_all" />
+
+        <ImageView
+            android:id="@+id/imgPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/btnContinue"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="20dp"
+            app:srcCompat="@drawable/payment" />
+
+
+        <Button
+            android:id="@+id/btnContinue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/txtBottom"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:textSize="20sp"
+            android:layout_marginBottom="20dp"
+            android:textColor="@color/white"
+             android:drawableTint="@color/white"
+            android:onClick="onPurchaseClicked"
+            android:background="@drawable/continue_payment_button"
+            android:drawableRight="@drawable/arrow_right"
+            android:text="@string/btn_continue" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp" android:visibility="invisible"
+        android:layout_marginBottom="25dp"
+        android:text="@string/buy_premium_bottom_message"
+        android:textAlignment="viewStart"
+        android:textColor="@color/color_white"
+        android:textSize="9sp" />
+
+
+</RelativeLayout>

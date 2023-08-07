@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="spacing_xsmall">4dp</dimen>
+    <dimen name="spacing_middle">10dp</dimen>
+    <dimen name="spacing_large">16dp</dimen>
+    <dimen name="spacing_xlarge">20dp</dimen>
+    <dimen name="spacing_xxlarge">40dp</dimen>
+    <dimen name="spacing_xxxlarge">100dp</dimen>
+
+    <dimen name="grid_space_wallpaper">4dp</dimen>
+    <dimen name="wallpaper_corner_radius">8dp</dimen>
+    <dimen name="button_corner_radius">20dp</dimen>
+    <dimen name="image_corner_radius">14dp</dimen>
+    <dimen name="video_thumbnail_size">48dp</dimen>
+
+    <dimen name="tab_indicator_offset">0dp</dimen>
+
+    <dimen name="text_size_medium">16sp</dimen>
+    <dimen name="text_size_large">20sp</dimen>
+
+    <dimen name="gnt_text_size_small">12sp</dimen>
+    <dimen name="gnt_ad_indicator_width">25dp</dimen>
+    <dimen name="gnt_ad_indicator_height">20dp</dimen>
+    <dimen name="gnt_ad_indicator_text_size">10sp</dimen>
+    <dimen name="default_btn_corner_radius">5dp</dimen>
+    <dimen name="padding_bottom_pager_lr">8dp</dimen>
+    <dimen name="padding_bottom_pager_tb">2dp</dimen>
+
+
+</resources>

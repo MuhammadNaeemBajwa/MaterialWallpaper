@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--default theme color-->
+    <color name="color_light_primary">#FF5722</color>
+    <color name="color_light_status_bar">#FB4106</color>
+    <color name="color_light_accent">#FF5722</color>
+    <color name="color_light_background">#FFFFFF</color>
+    <color name="color_light_native_ad_background">#F3F2F3</color>
+    <color name="color_selected_item">#48FF5722</color>
+
+    <!--dark theme color-->
+    <color name="color_dark_toolbar">#222D36</color>
+    <color name="color_dark_accent">#4e575d</color>
+    <color name="color_dark_accent_pressed">#737C82</color>
+
+
+    <color name="color_dark_background">#101D24</color>
+    <color name="color_dark_native_ad_background">#222D36</color>
+
+    <color name="color_light_text_default">#292929</color>
+    <color name="color_dark_text_default">#BDC0C3</color>
+
+    <!--other-->
+    <color name="color_black">#000000</color>
+    <color name="color_white">#FFFFFF</color>
+    <color name="color_yellow">#FBB828</color>
+    <color name="color_grey">#96989A</color>
+    <color name="color_grey_soft">#E0E0E0</color>
+    <color name="color_shimmer">#BCBEC1</color>
+    <color name="color_separator">#efefef</color>
+    <color name="color_background_image">#E0E0E0</color>
+<!--    <color name="color_orange">#FF5722</color>-->
+<!--    <color name="color_orange_pressed">#F57146</color>-->
+<!--    <color name="color_pay_button">#FF5722</color>-->
+
+
+
+
+
+
+<!--    <color name="colorPrimary">#3F51B5</color>-->
+<!--    <color name="colorPrimaryDark">#303F9F</color>-->
+<!--    <color name="colorAccent">#FF4081</color>-->
+<!--    <color name="withoutColoredBackground">#757575</color>-->
+<!--    <color name="itemActiveColorWithoutColoredBackground">#2196F3</color>-->
+<!--    <color name="logo_color">#3F51B5</color>-->
+
+    <color name="white">#ffffff</color>
+    <color name="defaultColor">#AEDEF4</color>
+    <color name="defaultColor_press">#A0CEE3</color>
+    <color name="color_dialog_popup">#424242</color>
+
+</resources>
