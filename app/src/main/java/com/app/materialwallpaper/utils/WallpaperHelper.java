@@ -147,12 +147,27 @@ public class WallpaperHelper {
                 }), DELAY_SET);
     }
 
+//    public void onWallpaperApplied(ProgressDialog progressDialog, AdsManager adsManager, String message) {
+//        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+//            showSuccessDialog(message, adsManager);
+//            progressDialog.dismiss();
+//        }, DELAY_SET);
+//    }
+
+
+    //Added on 8/7/2023 By Hasnain To avoid Crash
     public void onWallpaperApplied(ProgressDialog progressDialog, AdsManager adsManager, String message) {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            showSuccessDialog(message, adsManager);
-            progressDialog.dismiss();
+            if (!activity.isFinishing() && progressDialog.isShowing()) {
+                showSuccessDialog(message, adsManager);
+                if (!activity.isFinishing()) {
+                    progressDialog.dismiss();
+                }
+            }
         }, DELAY_SET);
     }
+
+
 
     public void showSuccessDialog(String message, AdsManager adsManager) {
 
@@ -192,22 +207,48 @@ public class WallpaperHelper {
 
         }.start();
 
-        btnDone.setOnClickListener(view -> {
-            lytSuccess.animate()
-                    .translationY(lytSuccess.getHeight())
-                    //.alpha(0.0f)
-                    .setDuration(200)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                            lytSuccess.setVisibility(View.GONE);
-                        }
-                    });
+//        btnDone.setOnClickListener(view -> {
+//            lytSuccess.animate()
+//                    .translationY(lytSuccess.getHeight())
+//                    //.alpha(0.0f)
+//                    .setDuration(200)
+//                    .setListener(new AnimatorListenerAdapter() {
+//                        @Override
+//                        public void onAnimationEnd(Animator animation) {
+//                            super.onAnimationEnd(animation);
+//                            lytSuccess.setVisibility(View.GONE);
+//                        }
+//                    });
+//
+//            //activity.finish();
+//            //adsManager.destroyBannerAd();
+//        });
 
-            //activity.finish();
-            //adsManager.destroyBannerAd();
+
+
+        //Added by hasnain on 8/7/2023 to avoid a crash
+
+
+        btnDone.setOnClickListener(view -> {
+            if (!activity.isFinishing()) {
+                lytSuccess.animate()
+                        .translationY(lytSuccess.getHeight())
+                        //.alpha(0.0f)
+                        .setDuration(200)
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                if (!activity.isFinishing()) {
+                                    lytSuccess.setVisibility(View.GONE);
+                                }
+                            }
+                        });
+            }
         });
+
+
+
 
     }
 

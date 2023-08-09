@@ -71,9 +71,6 @@ public class FragmentWallpaper extends Fragment {
     AdsManager adsManager;
     Activity activity;
     private String wallpaperType = Wallpaper.TYPE_IMAGE;
-
-
-
     private int currentPage = 1;
     private final int PAGE_SIZE = 30;
     private boolean isLoading = false;

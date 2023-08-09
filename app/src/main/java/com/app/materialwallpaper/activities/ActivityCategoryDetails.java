@@ -1,26 +1,13 @@
 package com.app.materialwallpaper.activities;
-
-import static com.app.materialwallpaper.fragments.FragmentWallpaper.WALLPAPER_PER_PAGE;
 import static com.app.materialwallpaper.utils.Constant.EXTRA_OBJC;
-import static com.solodroid.ads.sdk.util.Constant.ADMOB;
-import static com.solodroid.ads.sdk.util.Constant.APPLOVIN;
-import static com.solodroid.ads.sdk.util.Constant.APPLOVIN_MAX;
-import static com.solodroid.ads.sdk.util.Constant.FAN;
-import static com.solodroid.ads.sdk.util.Constant.GOOGLE_AD_MANAGER;
-import static com.solodroid.ads.sdk.util.Constant.STARTAPP;
-
-import android.app.MediaRouteButton;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -30,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.app.materialwallpaper.Config;
 import com.app.materialwallpaper.R;
 import com.app.materialwallpaper.adapters.AdapterMenu;
@@ -47,19 +33,15 @@ import com.app.materialwallpaper.utils.AdsManager;
 import com.app.materialwallpaper.utils.Constant;
 import com.app.materialwallpaper.utils.Tools;
 import com.app.materialwallpaper.view.CustomFilterDropDown;
-import com.app.materialwallpaper.view.HorizontalPagingIndicator;
 import com.facebook.shimmer.ShimmerFrameLayout;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ActivityCategoryDetails extends AppCompatActivity {
-
     private RecyclerView recyclerView;
     private AdapterWallpaper adapterWallpaper;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -74,10 +56,7 @@ public class ActivityCategoryDetails extends AppCompatActivity {
     AdsPref adsPref;
     AdsManager adsManager;
     ImageButton btn_sort;
-    String order;
-    private HorizontalPagingIndicator pagingIndicator;
     private int currentPage = 1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,15 +74,7 @@ public class ActivityCategoryDetails extends AppCompatActivity {
         sharedPref.setDefaultSortWallpaper();
 
         category = (Category) getIntent().getSerializableExtra(EXTRA_OBJC);
-        pagingIndicator = findViewById(R.id.pageNavigator);
-        pagingIndicator.setPageChangeListener(pageNumber -> {
-            if (adsPref.getNativeAdWallpaperList() != 0) {
-                setLoadMoreNativeAd(pageNumber);
-            } else {
-                setLoadMore(pageNumber);
-            }
-        });
-        pagingIndicator.setVisibility(View.GONE);
+
         Constant.FILTER = Constant.FILTER_DEFAULT;
         Constant.ORDER = Constant.ORDER_DEFAULT;
         Constant.LAST_SELECTED_ITEM_POSITION = 0;
@@ -150,46 +121,18 @@ public class ActivityCategoryDetails extends AppCompatActivity {
             }
         });
 
-        // detect when scroll reach bottom
-//        adapterWallpaper.setOnLoadMoreListener(current_page -> {
-//            if (adsPref.getNativeAdWallpaperList() != 0) {
-//                setLoadMoreNativeAd(current_page);
-//            } else {
-//                setLoadMore(current_page);
-//            }
-//        });
-
-        // on swipe list
-//        swipeRefreshLayout.setOnRefreshListener(() -> {
-//            if (callbackCall != null && callbackCall.isExecuted()) callbackCall.cancel();
-//            adapterWallpaper.resetListData();
-//            if (Tools.isConnect(this)) {
-//                dbHelper.deleteWallpaperByCategory(DBHelper.TABLE_CATEGORY_DETAIL, category.category_id);
-//            }
-//            requestAction(1);
-//        });
-
-        requestAction(currentPage);
+        requestAction();
         setupToolbar();
         onOptionMenuClicked();
 
     }
 
-    public void setLoadMoreNativeAd(int currentPage) {
-        Log.d("page", "currentPage: " + currentPage);
-        // Assuming final total items equal to real post items plus the ad
-        if (adapterWallpaper.isPageLoaded(currentPage)) {
-            adapterWallpaper.setCurPage(currentPage);
-        } else {
-            requestAction(currentPage);
-        }
-    }
 
     public void setLoadMore(int currentPage) {
         if (adapterWallpaper.isPageLoaded(currentPage)) {
             adapterWallpaper.setCurPage(currentPage);
         } else {
-            requestAction(currentPage);
+            requestAction();
         }
     }
 
@@ -213,8 +156,6 @@ public class ActivityCategoryDetails extends AppCompatActivity {
                 } else if (text.equalsIgnoreCase(Wallpaper.Price.PREMIUM.value)) {
                     Constant.FILTER = Constant.FILTER_PREMIUM;;
                 }
-
-                pagingIndicator.setVisibility(View.GONE);
                 adapterWallpaper.clear();
                 setLoadMore(1);
 
@@ -244,13 +185,7 @@ public class ActivityCategoryDetails extends AppCompatActivity {
         if (wallpapers.size() == 0) {
             showNoItemView(true);
         }
-        if (postTotal > WALLPAPER_PER_PAGE) {
-            pagingIndicator.setPageCount(postTotal / WALLPAPER_PER_PAGE + (postTotal % WALLPAPER_PER_PAGE > 0 ? 1 : 0));
-//            pagingIndicator.setCurrentPage(currentPage - 1);
-            pagingIndicator.setVisibility(View.VISIBLE);
-        } else {
-            pagingIndicator.setVisibility(View.GONE);
-        }
+
     }
 
     private void requestListPostApi(final int page_no) {
@@ -295,23 +230,7 @@ public class ActivityCategoryDetails extends AppCompatActivity {
     }
 
     private void insertData(List<Wallpaper> wallpapers) {
-//        if (adsPref.getNativeAdWallpaperList() != 0) {
-//            switch (adsPref.getAdType()) {
-//                case ADMOB:
-//                case GOOGLE_AD_MANAGER:
-//                case FAN:
-//                case APPLOVIN:
-//                case APPLOVIN_MAX:
-//                case STARTAPP:
-//                    adapterWallpaper.insertDataWithNativeAd(currentPage,wallpapers);
-//                    break;
-//                default:
-//                    adapterWallpaper.insertData(currentPage,wallpapers);
-//                    break;
-//            }
-//        } else {
             adapterWallpaper.insertData(currentPage,wallpapers);
-       // }
 
     }
 
@@ -323,13 +242,13 @@ public class ActivityCategoryDetails extends AppCompatActivity {
         showFailedView(true, getString(R.string.failed_text));
     }
 
-    public void requestAction(final int page_no) {
-        currentPage = page_no;
+    private void requestAction() {
         showFailedView(false, "");
         showNoItemView(false);
         swipeProgress(true);
-        new Handler(Looper.getMainLooper()).postDelayed(() -> requestListPostApi(page_no), Constant.DELAY_TIME);
+        requestListPostApi(1); // Directly call the method with page number 1
     }
+
 
     private void showFailedView(boolean show, String message) {
         View lyt_failed = findViewById(R.id.lyt_failed);
@@ -341,7 +260,7 @@ public class ActivityCategoryDetails extends AppCompatActivity {
             recyclerView.setVisibility(View.VISIBLE);
             lyt_failed.setVisibility(View.GONE);
         }
-        findViewById(R.id.failed_retry).setOnClickListener(view -> requestAction(failedPage));
+        findViewById(R.id.failed_retry).setOnClickListener(view -> requestAction());
     }
 
     private void showNoItemView(boolean show) {
@@ -426,7 +345,7 @@ public class ActivityCategoryDetails extends AppCompatActivity {
                     if (Tools.isConnect(this)) {
                         dbHelper.deleteWallpaperByCategory(DBHelper.TABLE_CATEGORY_DETAIL, category.category_id);
                     }
-                    requestAction(1);
+                    requestAction();
                     dialog.dismiss();
                 });
                 alert.setNegativeButton(R.string.dialog_option_cancel, (dialog, i) -> {
