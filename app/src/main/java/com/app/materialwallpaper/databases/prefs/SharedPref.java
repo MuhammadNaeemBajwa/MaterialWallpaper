@@ -37,10 +37,6 @@ public class SharedPref {
     public String getBaseUrl() {
         return sharedPreferences.getString("base_url", "http://10.0.2.2/material_wallpaper");
 
-
-        //6/7/2023 added by M.Hasnain for a new server
-//        return sharedPreferences.getString("base_url", "https://nw3.fcomet.com:2083/");
-
     }
 
     public void saveConfig( String privacyPolicy, String moreAppsUrl, String copyright) {

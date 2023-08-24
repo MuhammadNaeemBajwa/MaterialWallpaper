@@ -41,6 +41,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.app.materialwallpaper.Config;
 import com.app.materialwallpaper.R;
+import com.app.materialwallpaper.VideoAd.VideoAd;
 import com.app.materialwallpaper.adapters.AdapterCategory;
 import com.app.materialwallpaper.adapters.AdapterSearch;
 import com.app.materialwallpaper.adapters.AdapterWallpaper;
@@ -49,6 +50,7 @@ import com.app.materialwallpaper.callbacks.CallbackWallpaper;
 import com.app.materialwallpaper.components.ItemOffsetDecoration;
 import com.app.materialwallpaper.databases.prefs.AdsPref;
 import com.app.materialwallpaper.databases.prefs.SharedPref;
+import com.app.materialwallpaper.databases.sqlite.DBHelper;
 import com.app.materialwallpaper.fragments.FragmentWallpaper2;
 import com.app.materialwallpaper.models.Category;
 import com.app.materialwallpaper.models.Wallpaper;
@@ -99,7 +101,11 @@ public class ActivitySearch extends AppCompatActivity {
     AdsManager adsManager;
     LinearLayout lytBannerAd;
     private int currentPage = 1;
-    private HorizontalPagingIndicator pagingIndicator;
+
+    private boolean isLoading = false;
+    private final boolean isLastPage = false;
+    private final List<Wallpaper> wallpaperList = new ArrayList<>();
+    private final int PAGE_SIZE = 50;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,28 +124,6 @@ public class ActivitySearch extends AppCompatActivity {
         initShimmerLayout();
         setupToolbar();
 
-        pagingIndicator = findViewById(R.id.pageNavigator);
-        pagingIndicator.setVisibility(View.GONE);
-        pagingIndicator.setPageChangeListener(pageNumber -> {
-            currentPage = pageNumber;
-            if (adsPref.getNativeAdWallpaperList() != 0) {
-                switch (adsPref.getAdType()) {
-                    case ADMOB:
-                    case GOOGLE_AD_MANAGER:
-                    case FAN:
-                    case APPLOVIN:
-                    case APPLOVIN_MAX:
-                    case STARTAPP:
-                        setLoadMoreNativeAd(pageNumber);
-                        break;
-                    default:
-                        setLoadMore(pageNumber);
-                        break;
-                }
-            } else {
-                setLoadMore(pageNumber);
-            }
-        });
 
         adsManager = new AdsManager(this);
         adsManager.loadBannerAd(adsPref.getBannerAdStatusSearch());
@@ -177,7 +161,8 @@ public class ActivitySearch extends AppCompatActivity {
             swipeProgress(false);
         }
 
-        recyclerViewSuggestion.setLayoutManager(new LinearLayoutManager(this));
+//        recyclerViewSuggestion.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewSuggestion.setLayoutManager(new StaggeredGridLayoutManager(sharedPref.getWallpaperColumns(), StaggeredGridLayoutManager.VERTICAL));
         //recycler_view_suggestion.setHasFixedSize(true);
 
         //set data and list adapter suggestion
@@ -272,22 +257,46 @@ public class ActivitySearch extends AppCompatActivity {
             Constant.wallpapers.addAll(adapterWallpaper.getCurrentItems());
             Constant.position = position;
             if(Constant.wallpapers.get(position).isPremium() && !MyApplication.getApp().isPremium()){
-                BuyPremiumActivity.start(ActivitySearch.this, null);
+//                BuyPremiumActivity.start(ActivitySearch.this, null);
+                VideoAd.start(ActivitySearch.this, null);
             }else {
                 Intent intent = new Intent(ActivitySearch.this, ActivityWallpaperDetail.class);
                 startActivity(intent);
             }
 
-            adsManager.showInterstitialAd();
-            adsManager.destroyBannerAd();
+//            adsManager.showInterstitialAd();
+//            adsManager.destroyBannerAd();
         });
+
+//        recyclerViewWallpaper.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(@NonNull RecyclerView v, int state) {
+//                super.onScrollStateChanged(v, state);
+//            }
+//        });
 
         recyclerViewWallpaper.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(@NonNull RecyclerView v, int state) {
-                super.onScrollStateChanged(v, state);
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                StaggeredGridLayoutManager layoutManager = (StaggeredGridLayoutManager) recyclerView.getLayoutManager();
+                assert layoutManager != null;
+                int[] lastVisibleItemPositions = layoutManager.findLastVisibleItemPositions(null);
+                int visibleItemCount = layoutManager.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                int firstVisibleItemPosition = getFirstVisibleItem(lastVisibleItemPositions);
+
+
+                if (!isLoading && !isLastPage) {
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0 && totalItemCount >= PAGE_SIZE) {
+                        // Load more data when the user scrolls to the end of the list
+
+                        loadMoreData();
+                    }
+                }
             }
         });
+
 
         // detect when scroll reach bottom
         adapterWallpaper.setOnLoadMoreListener(current_page -> {
@@ -321,6 +330,53 @@ public class ActivitySearch extends AppCompatActivity {
 
 
 
+    }
+
+    private int getFirstVisibleItem(int[] positions) {
+        int firstVisibleItem = positions[0];
+        for (int position : positions) {
+            if (position < firstVisibleItem) {
+                firstVisibleItem = position;
+            }
+        }
+        return firstVisibleItem;
+    }
+    private void loadMoreData() {
+        if (!isLoading && !isLastPage) {
+            requestAction(currentPage);
+        }
+    }
+    private void requestAction(final int page_no) {
+        isLoading = true;
+        currentPage = page_no;
+        showFailedView(false, "");
+        showNoItemView(false);
+        swipeProgress(true);
+        requestSearchApiWallpaper(currentPage,"10"); // Directly call the method with page number 1
+    }
+    private void showFailedView(boolean show, String message) {
+        View lyt_failed = findViewById(R.id.lyt_failed);
+        ((TextView) findViewById(R.id.failed_message)).setText(message);
+        if (show) {
+            recyclerViewWallpaper.setVisibility(View.GONE);
+            lyt_failed.setVisibility(View.VISIBLE);
+        } else {
+            recyclerViewWallpaper.setVisibility(View.VISIBLE);
+            lyt_failed.setVisibility(View.GONE);
+        }
+        findViewById(R.id.failed_retry).setOnClickListener(view -> requestAction(failedPage));
+    }
+
+    private void showNoItemView(boolean show) {
+        View lyt_no_item = findViewById(R.id.lyt_no_item);
+        ((TextView) findViewById(R.id.no_item_message)).setText(R.string.msg_no_item);
+        if (show) {
+            recyclerViewWallpaper.setVisibility(View.GONE);
+            lyt_no_item.setVisibility(View.VISIBLE);
+        } else {
+            recyclerViewWallpaper.setVisibility(View.VISIBLE);
+            lyt_no_item.setVisibility(View.GONE);
+        }
     }
 
     public void setLoadMoreNativeAd(int current_page) {
@@ -422,6 +478,18 @@ public class ActivitySearch extends AppCompatActivity {
         public void afterTextChanged(Editable editable) {
         }
     };
+    private void displayApiResult(final List<Wallpaper> wallpapers) {
+        insertData(wallpapers);
+        swipeProgress(false);
+        if (wallpapers.size() == 0) {
+            showNoItemView(true);
+        }
+
+    }
+    private void insertData(List<Wallpaper> wallpapers) {
+        adapterWallpaper.insertData(currentPage, wallpapers);
+
+    }
 
     private void requestSearchApiWallpaper(final int page_no, final String query) {
         ApiInterface apiInterface = RestAdapter.createAPI(sharedPref.getBaseUrl());
@@ -439,29 +507,13 @@ public class ActivitySearch extends AppCompatActivity {
                 swipeProgress(false);
                 if (resp != null && resp.status.equals("ok")) {
                     postTotal = resp.count_total;
-                    if (postTotal > WALLPAPER_PER_PAGE) {
-                        pagingIndicator.setPageCount(postTotal / WALLPAPER_PER_PAGE + (postTotal % WALLPAPER_PER_PAGE > 0 ? 1 : 0));
-                        pagingIndicator.setCurrentPage(currentPage - 1);
-                        pagingIndicator.setVisibility(View.VISIBLE);
-                    } else {
-                        pagingIndicator.setVisibility(View.GONE);
-                    }
+                    isLoading = false;
+                    currentPage++;
+                    postTotal = resp.count_total;
+                    displayApiResult(resp.posts);
+                    wallpaperList.addAll(resp.posts);
+                    displayApiResult(wallpaperList);
 
-//                    if (adsPref.getNativeAdWallpaperList() != 0) {
-//                        switch (adsPref.getAdType()) {
-//                            case ADMOB:
-//                            case GOOGLE_AD_MANAGER:
-//                            case FAN:
-//                            case APPLOVIN:
-//                            case APPLOVIN_MAX:
-//                            case STARTAPP:
-//                                adapterWallpaper.insertDataWithNativeAd(1,resp.posts);
-//                                break;
-//                            default:
-//                                adapterWallpaper.insertData(currentPage, resp.posts);
-//                                break;
-//                        }
-//                    } else {
                         adapterWallpaper.insertData(currentPage, resp.posts);
 //                    }
                     if (resp.posts.size() == 0) {

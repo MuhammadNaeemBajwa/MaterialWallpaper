@@ -35,17 +35,37 @@ public class SetMp4AsWallpaperService extends WallpaperService {
             }
         }
 
+//        public void onSurfaceCreated(SurfaceHolder holder) {
+//            Log.i(this.TAG, "onSurfaceCreated");
+//            this.mediaPlayer.setSurface(holder.getSurface());
+//            this.mediaPlayer.start();
+//        }
+
+
+        //added on 8/22/2023 by hasnain to avoid crash
         public void onSurfaceCreated(SurfaceHolder holder) {
-            Log.i(this.TAG, "onSurfaceCreated");
-            this.mediaPlayer.setSurface(holder.getSurface());
-            this.mediaPlayer.start();
+            Log.i(TAG, "onSurfaceCreated");
+            if (mediaPlayer != null) {
+                mediaPlayer.setSurface(holder.getSurface());
+                mediaPlayer.start();
+            }
         }
 
+//        public void onSurfaceDestroyed(SurfaceHolder holder) {
+//            Log.i(this.TAG, "( INativeWallpaperEngine ): onSurfaceDestroyed");
+//            SetMp4AsWallpaperService.playHeadTime = this.mediaPlayer.getCurrentPosition();
+//            this.mediaPlayer.reset();
+//            this.mediaPlayer.release();
+//        }
+
         public void onSurfaceDestroyed(SurfaceHolder holder) {
-            Log.i(this.TAG, "( INativeWallpaperEngine ): onSurfaceDestroyed");
-            SetMp4AsWallpaperService.playHeadTime = this.mediaPlayer.getCurrentPosition();
-            this.mediaPlayer.reset();
-            this.mediaPlayer.release();
+            Log.i(TAG, "onSurfaceDestroyed");
+            if (mediaPlayer != null) {
+                SetMp4AsWallpaperService.playHeadTime = mediaPlayer.getCurrentPosition();
+                mediaPlayer.reset();
+                mediaPlayer.release();
+                mediaPlayer = null;
+            }
         }
     }
 }

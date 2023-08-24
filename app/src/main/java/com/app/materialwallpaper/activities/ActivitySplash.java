@@ -204,39 +204,10 @@ public class ActivitySplash extends AppCompatActivity {
             }
 
             public void onFailure(Call<CallbackSettings> call, Throwable th) {
-                // Handle the network failure case here
                 Log.e("onFailure", "" + th.getMessage());
                 startMainActivity(); // or any other appropriate action
             }
 
-//            public void onResponse(Call<CallbackSettings> call, Response<CallbackSettings> response) {
-//                CallbackSettings resp = response.body();
-//                if (resp != null && resp.status.equals("ok")) {
-//                    ads = resp.ads;
-//                    adStatus = resp.ads_status;
-//                    settings = resp.settings;
-//                    app = resp.app;
-//                    sharedPref.saveConfig(settings.privacy_policy, settings.more_apps_url, settings.copyright);
-//                    adsManager.saveAds(ads);
-//                    adsManager.saveAdStatus(adStatus);
-//                    sharedPref.saveMenuList(resp.menus);
-//                }
-//                if (app.status != null && app.status.equals("0")) {
-//                    Intent intent = new Intent(getApplicationContext(), ActivityRedirect.class);
-//                    intent.putExtra("redirect_url", app.redirect_url);
-//                    startActivity(intent);
-//                    finish();
-//                    Log.d(TAG, "App is inactive, call redirect method");
-//                } else {
-//                    startMainActivity();
-//                    Log.d(TAG, "App is active");
-//                }
-//            }
-//
-//            public void onFailure(Call<CallbackSettings> call, Throwable th) {
-//                Log.e("onFailure", "" + th.getMessage());
-//                startMainActivity();
-//            }
         });
     }
 

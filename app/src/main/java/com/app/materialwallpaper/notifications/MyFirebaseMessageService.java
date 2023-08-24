@@ -30,7 +30,6 @@ import java.net.URL;
 import java.util.Map;
 
 public class MyFirebaseMessageService extends FirebaseMessagingService {
-
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);

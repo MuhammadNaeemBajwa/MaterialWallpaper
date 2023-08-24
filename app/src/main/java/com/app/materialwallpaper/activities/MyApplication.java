@@ -56,7 +56,8 @@ import retrofit2.Response;
 public class MyApplication extends Application implements Application.ActivityLifecycleCallbacks {
 
     public static final String TAG = "MyApplication";
-    public static final String SKU_PREMIUM_UPGRADE = "premium";
+    public static final String SKU_PREMIUM_UPGRADE = "remove_ad";
+//    public static final String SKU_PREMIUM_UPGRADE = "premium";
 
     private AppOpenAdMob appOpenAdMob;
     private AppOpenAdManager appOpenAdManager;

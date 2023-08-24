@@ -10,8 +10,7 @@
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
     <uses-permission android:name="android.permission.SET_WALLPAPER_HINTS" />
     <uses-permission android:name="com.android.vending.BILLING" />
-
-
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
@@ -32,6 +31,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".VideoAd.VideoAd"
+            android:exported="false" />
         <activity
             android:name=".activities.BuyPremiumActivity"
             android:exported="true" />

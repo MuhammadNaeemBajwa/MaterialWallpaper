@@ -1,5 +1,6 @@
 package com.app.materialwallpaper.fragments;
 
+import static com.app.materialwallpaper.activities.MainActivity.TAG;
 import static com.app.materialwallpaper.utils.Constant.FILTER_ALL;
 import static com.app.materialwallpaper.utils.Constant.FILTER_DEFAULT;
 import static com.app.materialwallpaper.utils.Constant.FILTER_LIVE;
@@ -15,6 +16,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +31,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.app.materialwallpaper.Config;
 import com.app.materialwallpaper.R;
+import com.app.materialwallpaper.VideoAd.VideoAd;
 import com.app.materialwallpaper.activities.BuyPremiumActivity;
 import com.app.materialwallpaper.components.CustomTabLayout;
 import com.app.materialwallpaper.components.RtlViewPager;
@@ -38,7 +41,6 @@ import com.app.materialwallpaper.models.Wallpaper;
 import com.app.materialwallpaper.utils.SingletonEventBus;
 import com.app.materialwallpaper.view.CustomFilterDropDown;
 import com.google.android.material.appbar.AppBarLayout;
-import com.google.common.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,11 +82,15 @@ public class FragmentTabLayout extends Fragment {
             @Override
             public void onItemChanged(String text) {
                 SingletonEventBus.getInstance().post(text);
+                Log.d(TAG, "onItemChanged: text: " +text);
+
             }
 
             @Override
             public void onBuySelected() {
-                BuyPremiumActivity.start(getContext(), null);
+//                BuyPremiumActivity.start(getContext(), null);
+                VideoAd.start(getContext(), null);
+
             }
         });
 

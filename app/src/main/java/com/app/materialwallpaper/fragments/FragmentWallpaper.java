@@ -321,6 +321,7 @@ public class FragmentWallpaper extends Fragment {
         Log.d(TAG, "requestListPostApi: currentPage: " + currentPage);
         ApiInterface apiInterface = RestAdapter.createAPI(sharedPref.getBaseUrl());
 
+
         if (sharedPref.getWallpaperColumns() == 3) {
             Log.d(TAG, "requestListPostApi: shared: " + (sharedPref.getWallpaperColumns() == 3));
             callbackCall = apiInterface.getWallpapers(currentPage, Constant.LOAD_MORE_3_COLUMNS, filter, order);

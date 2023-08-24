@@ -219,7 +219,7 @@
 
     <com.app.materialwallpaper.view.HorizontalPagingIndicator
         android:id="@+id/pageNavigator"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_above="@+id/lyt_banner_ad"
         android:layout_height="wrap_content">

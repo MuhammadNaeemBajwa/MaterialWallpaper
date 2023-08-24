@@ -80,10 +80,25 @@ public class MainActivity extends AppCompatActivity {
     private AppUpdateManager appUpdateManager;
     private BottomSheetDialog mBottomSheetDialog;
 
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Save any necessary data related to the dialog state
+        if (mBottomSheetDialog != null && mBottomSheetDialog.isShowing()) {
+            outState.putBoolean("isBottomSheetDialogShowing", true);
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Tools.getTheme(this);
+
+        if (savedInstanceState != null && savedInstanceState.getBoolean("isBottomSheetDialogShowing", false)) {
+            // Restore the state of the bottom sheet dialog
+            showBottomSheetExitDialog();
+        }
         sharedPref = new SharedPref(this);
         if (sharedPref.getIsDarkTheme()) {
             Tools.darkNavigation(this);
@@ -115,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.getMenu().clear();
         if (Config.DISPLAY_CATEGORY_AS_MAIN_SCREEN) {
+            Log.d(TAG, "onCreate: display: " + (Config.DISPLAY_CATEGORY_AS_MAIN_SCREEN));
             bottomNavigationView.inflateMenu(R.menu.navigation_category);
         } else {
             bottomNavigationView.inflateMenu(R.menu.navigation_wallpaper);
@@ -144,13 +160,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
-
     public void showInterstitialAd() {
         adsManager.showInterstitialAd();
     }
 
     public void setupToolbar() {
+        Log.d(TAG, "setupToolbar: ");
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final ActionBar actionBar = getSupportActionBar();
@@ -166,8 +181,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
     @SuppressLint("NonConstantResourceId")
     public void initViewPager() {
+        Log.d(TAG, "initViewPager: ");
 
         if (Config.ENABLE_RTL_MODE) {
             viewPagerRTL = findViewById(R.id.view_pager_rtl);
@@ -243,7 +261,11 @@ public class MainActivity extends AppCompatActivity {
             });
         } else {
             viewPager = findViewById(R.id.view_pager);
-            viewPager.setAdapter(new MyAdapter(getSupportFragmentManager()));
+            MyAdapter myAdapter=new MyAdapter(getSupportFragmentManager());
+            viewPager.setAdapter(myAdapter);
+
+            myAdapter.notifyDataSetChanged();
+
             viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
                 @Override
                 public void onPageSelected(int position) {
@@ -556,12 +578,22 @@ public class MainActivity extends AppCompatActivity {
         alert.show();
     }
 
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        destroyBannerAd();
+//        Constant.isAppOpen = false;
+//    }
+
+    //Added on 8/22/2023 to avoid the crash
     @Override
     protected void onDestroy() {
         super.onDestroy();
         destroyBannerAd();
         Constant.isAppOpen = false;
+        mBottomSheetDialog = null; // Add this line
     }
+
 
     @Override
     protected void onResume() {

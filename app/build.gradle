@@ -127,5 +127,9 @@ dependencies {
 
     implementation project(":videowallpaper")
 
+//    implementation 'com.google.android.gms:play-services-ads:20.4.0'
+    implementation 'com.google.android.gms:play-services-ads:22.0.0'
+
+
 
 }

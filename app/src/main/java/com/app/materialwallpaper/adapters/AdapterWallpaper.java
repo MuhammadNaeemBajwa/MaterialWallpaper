@@ -194,7 +194,8 @@ public class AdapterWallpaper extends RecyclerView.Adapter<RecyclerView.ViewHold
             vItem.wallpaper_name.setText(p.image_name);
             vItem.category_name.setText(p.category_name);
             if(MyApplication.getApp().isPremium()){
-                vItem.premium_lock.setImageResource(R.drawable.unlock);
+//                vItem.premium_lock.setImageResource(R.drawable.unlock);
+                vItem.premium_lock.setImageResource(R.drawable.green_smiley);
             }
             vItem.premium_lock.setVisibility(p.isPremium() ? View.VISIBLE : View.GONE);
 

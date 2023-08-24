@@ -19,7 +19,6 @@ import retrofit2.http.Streaming;
 import retrofit2.http.Url;
 
 public interface ApiInterface {
-
     String CACHE = "Cache-Control: max-age=0";
     String AGENT = "Data-Agent: Material Wallpaper";
 

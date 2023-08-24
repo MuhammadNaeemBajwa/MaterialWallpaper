@@ -115,7 +115,9 @@
                     android:layout_marginTop="-5dp"
                     android:visibility="gone"
                     android:layout_marginRight="-5dp"
-                    android:src="@drawable/ad_icon" android:layout_alignParentRight="true" android:layout_alignParentTop="true"
+                    android:src="@drawable/ad_vector"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
                     android:layout_height="wrap_content">
 
                 </androidx.appcompat.widget.AppCompatImageButton>

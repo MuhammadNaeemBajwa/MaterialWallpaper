@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.app.materialwallpaper.Config;
 import com.app.materialwallpaper.R;
+import com.app.materialwallpaper.VideoAd.VideoAd;
 import com.app.materialwallpaper.activities.ActivityWallpaperDetail;
 import com.app.materialwallpaper.activities.BuyPremiumActivity;
 import com.app.materialwallpaper.activities.MainActivity;
@@ -54,9 +55,7 @@ import retrofit2.Response;
 
 public class FragmentWallpaper2 extends Fragment {
     private static final int SELECT_VIDEO_REQUEST_CODE = 101;
-
     public static final String ARG_ORDER = "order";
-
     public static final String ARG_TYPE = "type";
     public static final String ARG_FILTER = "filter";
     public static int WALLPAPER_PER_PAGE = Constant.LOAD_MORE_2_COLUMNS;
@@ -73,9 +72,7 @@ public class FragmentWallpaper2 extends Fragment {
     AdsManager adsManager;
     Activity activity;
     private int currentPage = 1;
-
     private String wallpaperType = Wallpaper.TYPE_IMAGE;
-
     private boolean isLoading = false;
     private final boolean isLastPage = false;
     private final List<Wallpaper> wallpaperList=new ArrayList<>();
@@ -88,6 +85,7 @@ public class FragmentWallpaper2 extends Fragment {
     }
 
     private void loadLocalVideoFiles() {
+        Log.d(TAG, "loadLocalVideoFiles: ");
         List<Wallpaper> localVideos = getVideoFilesFromCache();
         // if (localVideos != null) {
         displayApiResult(localVideos);
@@ -116,38 +114,98 @@ public class FragmentWallpaper2 extends Fragment {
         }
     }
 
+
+
+
+
+//    private void copyVideoToAppFolder(Uri videoUri) {
+//        try {
+//            InputStream inputStream = activity.getContentResolver().openInputStream(videoUri);
+//            if (inputStream != null) {
+//                File appVideosFolder = new File(activity.getCacheDir(), "videos");
+//                if (!appVideosFolder.exists()) {
+//                    appVideosFolder.mkdirs();
+//                }
+//                DocumentFile documentFile = DocumentFile.fromSingleUri(activity, videoUri);
+//                if (documentFile != null) {
+//                    String fileName = documentFile.getName();
+//                    assert fileName != null;
+//                    File copiedVideoFile = new File(appVideosFolder, fileName);
+//                    OutputStream outputStream = new FileOutputStream(copiedVideoFile);
+//
+//                    byte[] buffer = new byte[1024];
+//                    int bytesRead;
+//                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+//                        outputStream.write(buffer, 0, bytesRead);
+//                    }
+//                    inputStream.close();
+//                    outputStream.close();
+//                    currentPage = 1;
+//                    showNoItemView(false);
+//                    loadLocalVideoFiles();
+////                    addVideoToSharedPreferences(copiedVideoFile.getAbsolutePath());
+//                }
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+
+// added on 8/22/2023 to remove crash
+
     private void copyVideoToAppFolder(Uri videoUri) {
+        // Check if activity or videoUri is null
+        if (activity == null || videoUri == null) {
+            Log.e(TAG, "copyVideoToAppFolder: Activity or Uri is null.");
+            return;
+        }
+
         try {
             InputStream inputStream = activity.getContentResolver().openInputStream(videoUri);
             if (inputStream != null) {
                 File appVideosFolder = new File(activity.getCacheDir(), "videos");
                 if (!appVideosFolder.exists()) {
-                    appVideosFolder.mkdirs();
+                    if (appVideosFolder.mkdirs()) {
+                        Log.d(TAG, "copyVideoToAppFolder: Created videos folder");
+                    } else {
+                        Log.e(TAG, "copyVideoToAppFolder: Failed to create videos folder");
+                    }
                 }
+
+                // Using DocumentFile to handle permissions
                 DocumentFile documentFile = DocumentFile.fromSingleUri(activity, videoUri);
                 if (documentFile != null) {
                     String fileName = documentFile.getName();
-                    assert fileName != null;
                     File copiedVideoFile = new File(appVideosFolder, fileName);
-                    OutputStream outputStream = new FileOutputStream(copiedVideoFile);
 
-                    byte[] buffer = new byte[1024];
-                    int bytesRead;
-                    while ((bytesRead = inputStream.read(buffer)) != -1) {
-                        outputStream.write(buffer, 0, bytesRead);
+                    try (OutputStream outputStream = new FileOutputStream(copiedVideoFile)) {
+                        byte[] buffer = new byte[1024];
+                        int bytesRead;
+                        while ((bytesRead = inputStream.read(buffer)) != -1) {
+                            outputStream.write(buffer, 0, bytesRead);
+                        }
+                        Log.d(TAG, "copyVideoToAppFolder: Video copied successfully");
+
+                        // Reset page and load videos
+                        currentPage = 1;
+                        showNoItemView(false);
+                        loadLocalVideoFiles();
+                    } catch (IOException e) {
+                        Log.e(TAG, "copyVideoToAppFolder: Error copying video: " + e.getMessage());
+                    } finally {
+                        inputStream.close();
                     }
-                    inputStream.close();
-                    outputStream.close();
-                    currentPage = 1;
-                    showNoItemView(false);
-                    loadLocalVideoFiles();
-//                    addVideoToSharedPreferences(copiedVideoFile.getAbsolutePath());
+                } else {
+                    Log.e(TAG, "copyVideoToAppFolder: DocumentFile is null");
                 }
             }
         } catch (IOException e) {
+            Log.e(TAG, "copyVideoToAppFolder: IOException: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
 
 
     private List<Wallpaper> getVideoFilesFromCache() {
@@ -194,6 +252,7 @@ public class FragmentWallpaper2 extends Fragment {
 
         }
 
+
         setHasOptionsMenu(true);
         sharedPref = new SharedPref(activity);
 
@@ -225,20 +284,24 @@ public class FragmentWallpaper2 extends Fragment {
 //            if(isVideoWallpaperType()) {
             Constant.wallpapers.add(selectedItem);
             Constant.position = 0;
+
 //            } else {
 //                Constant.wallpapers.addAll(adapterWallpaper.getCurrentItems());
 //                Constant.position = position;
 //            }
 
-
             if (selectedItem.isPremium() && !MyApplication.getApp().isPremium()) {
-                BuyPremiumActivity.start(activity, null);
+//                BuyPremiumActivity.start(activity, null);
+                VideoAd.start(activity, null);
+
             } else {
                 Intent intent = new Intent(activity, ActivityWallpaperDetail.class);
                 startActivity(intent);
             }
-            ((MainActivity) activity).showInterstitialAd();
-            ((MainActivity) activity).destroyBannerAd();
+
+            //Display add after click on item
+//            ((MainActivity) activity).showInterstitialAd();
+//            ((MainActivity) activity).destroyBannerAd();
         });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -255,7 +318,6 @@ public class FragmentWallpaper2 extends Fragment {
 
                 if (!isLoading && !isLastPage) {
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0 && totalItemCount >= PAGE_SIZE) {
-                        // Load more data when the user scrolls to the end of the list
 
                         loadMoreData();
                     }
@@ -263,41 +325,7 @@ public class FragmentWallpaper2 extends Fragment {
             }
         });
 
-/*
-                swipeRefreshLayout.setEnabled(false);
-         detect when scroll reach bottom
-                adapterWallpaper.setOnLoadMoreListener(current_page -> {
-                    if (adsPref.getNativeAdWallpaperList() != 0) {
-                        switch (adsPref.getAdType()) {
-                            case ADMOB:
-                            case GOOGLE_AD_MANAGER:
-                            case FAN:
-                            case APPLOVIN:
-                            case APPLOVIN_MAX:
-                            case STARTAPP:
-                                setLoadMoreNativeAd(current_page);
-                                break;
-                            default:
-                                setLoadMore(current_page);
-                                break;
-                        }
-                    } else {
-                        setLoadMore(current_page);
-                    }
-                });
-         on swipe list
-                swipeRefreshLayout.setOnRefreshListener(() -> {
-                    if (callbackCall != null && callbackCall.isExecuted()) callbackCall.cancel();
-                    adapterWallpaper.resetListData();
-                    if (Tools.isConnect(activity)) {
-                        dbHelper.deleteAll(DBHelper.TABLE_RECENT);
-                    }
-                    requestAction(1);
-                });
-        */
-
         requestAction(currentPage);
-
         return rootView;
     }
 
@@ -367,7 +395,8 @@ public class FragmentWallpaper2 extends Fragment {
                             dbHelper.addListWallpaper(resp.posts, DBHelper.TABLE_GIF);
                             break;
                     }
-                } else {
+                }
+                else {
                     onFailRequest(page_no);
                 }
             }

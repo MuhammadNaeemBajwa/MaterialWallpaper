@@ -141,6 +141,13 @@
 
     <string name="drop_down_item_free">Free</string>
     <string name="drop_down_item_premium">Premium</string>
+    <string name="sunset_city">Sunset City</string>
+    <string name="watch_a_short_add">Watch a short ad to download this wallpaper</string>
+    <string name="lifestyle">Lifestyle</string>
+    <string name="watch_ad">Watch Ad</string>
+    <string name="sick_of_ads">Sick of ads?</string>
+    <string name="remove_ad">Remove all ads for only $1.99</string>
+    <string name="remove_all_ads">Remove all ads</string>
     <string name="drop_down_item_buy">Buy</string>
     <string name="buy_premium_message">Unlock All\nPremium Wallpapers\nand Get Rid of All Ads!</string>
     <string name="btn_continue" tools:ignore="ExtraTranslation">Continue</string>
@@ -151,7 +158,7 @@
     <string name="cancel">Cancel</string>
     <string name="drop_down_item_all">All</string>
     <string name="premium_upgrade_purchased">Premium upgrade has been purchased.</string>
-    <string name="premium_upgrade_restored" >Premium upgrade has been restored.</string>
+    <string name="premium_upgrade_restored">Premium upgrade has been restored.</string>
     <string name="video_wallpaper">Video</string>
     <string name="title_set_action_delete">Delete</string>
     <string name="wallpaper_deleted">Wallpaper deleted successfully</string>

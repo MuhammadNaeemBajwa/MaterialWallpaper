@@ -1,5 +1,8 @@
 package com.app.materialwallpaper.activities;
+
+import static com.app.materialwallpaper.activities.MyApplication.TAG;
 import static com.app.materialwallpaper.utils.Constant.EXTRA_OBJC;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -17,8 +21,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.app.materialwallpaper.Config;
 import com.app.materialwallpaper.R;
+import com.app.materialwallpaper.VideoAd.VideoAd;
 import com.app.materialwallpaper.adapters.AdapterMenu;
 import com.app.materialwallpaper.adapters.AdapterWallpaper;
 import com.app.materialwallpaper.callbacks.CallbackWallpaper;
@@ -34,9 +40,11 @@ import com.app.materialwallpaper.utils.Constant;
 import com.app.materialwallpaper.utils.Tools;
 import com.app.materialwallpaper.view.CustomFilterDropDown;
 import com.facebook.shimmer.ShimmerFrameLayout;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -57,6 +65,12 @@ public class ActivityCategoryDetails extends AppCompatActivity {
     AdsManager adsManager;
     ImageButton btn_sort;
     private int currentPage = 1;
+
+    private boolean isLoading = false;
+    private final boolean isLastPage = false;
+    private final List<Wallpaper> wallpaperList = new ArrayList<>();
+    private final int PAGE_SIZE = 50;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,36 +117,67 @@ public class ActivityCategoryDetails extends AppCompatActivity {
             Constant.wallpapers.addAll(adapterWallpaper.getCurrentItems());
             Constant.position = position;
 
-            if(Constant.wallpapers.get(position).isPremium() && !MyApplication.getApp().isPremium()){
-                BuyPremiumActivity.start(ActivityCategoryDetails.this, null);
-            }else {
+            if (Constant.wallpapers.get(position).isPremium() && !MyApplication.getApp().isPremium()) {
+//                BuyPremiumActivity.start(ActivityCategoryDetails.this, null);
+                VideoAd.start(ActivityCategoryDetails.this, null);
+
+            } else {
                 Intent intent = new Intent(ActivityCategoryDetails.this, ActivityWallpaperDetail.class);
                 startActivity(intent);
             }
 
-            adsManager.showInterstitialAd();
-            adsManager.destroyBannerAd();
+//            adsManager.showInterstitialAd();
+//            adsManager.destroyBannerAd();
         });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(@NonNull RecyclerView v, int state) {
-                super.onScrollStateChanged(v, state);
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                StaggeredGridLayoutManager layoutManager = (StaggeredGridLayoutManager) recyclerView.getLayoutManager();
+                assert layoutManager != null;
+                int[] lastVisibleItemPositions = layoutManager.findLastVisibleItemPositions(null);
+                int visibleItemCount = layoutManager.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                int firstVisibleItemPosition = getFirstVisibleItem(lastVisibleItemPositions);
+
+
+                if (!isLoading && !isLastPage) {
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0 && totalItemCount >= PAGE_SIZE) {
+                        // Load more data when the user scrolls to the end of the list
+
+                        loadMoreData();
+                    }
+                }
             }
         });
 
-        requestAction();
+        requestAction(currentPage);
         setupToolbar();
         onOptionMenuClicked();
-
+    }
+    private int getFirstVisibleItem(int[] positions) {
+        int firstVisibleItem = positions[0];
+        for (int position : positions) {
+            if (position < firstVisibleItem) {
+                firstVisibleItem = position;
+            }
+        }
+        return firstVisibleItem;
     }
 
+
+    private void loadMoreData() {
+        if (!isLoading && !isLastPage) {
+            requestAction(currentPage);
+        }
+    }
 
     public void setLoadMore(int currentPage) {
         if (adapterWallpaper.isPageLoaded(currentPage)) {
             adapterWallpaper.setCurPage(currentPage);
         } else {
-            requestAction();
+            requestAction(currentPage);
         }
     }
 
@@ -150,11 +195,13 @@ public class ActivityCategoryDetails extends AppCompatActivity {
             @Override
             public void onItemChanged(String text) {
                 if (text.equalsIgnoreCase(Wallpaper.Price.ALL.value)) {
+                    Log.d(TAG, "onItemChanged: all: " + (text.equalsIgnoreCase(Wallpaper.Price.ALL.value)));
                     Constant.FILTER = Constant.FILTER_ALL;
                 } else if (text.equalsIgnoreCase(Wallpaper.Price.FREE.value)) {
+                    Log.d(TAG, "onItemChanged: FREE: " + (text.equalsIgnoreCase(Wallpaper.Price.FREE.value)));
                     Constant.FILTER = Constant.FILTER_FREE;
                 } else if (text.equalsIgnoreCase(Wallpaper.Price.PREMIUM.value)) {
-                    Constant.FILTER = Constant.FILTER_PREMIUM;;
+                    Constant.FILTER = Constant.FILTER_PREMIUM;
                 }
                 adapterWallpaper.clear();
                 setLoadMore(1);
@@ -164,9 +211,13 @@ public class ActivityCategoryDetails extends AppCompatActivity {
             @Override
             public void onBuySelected() {
                 try {
-                    BuyPremiumActivity.start(ActivityCategoryDetails.this, wallpapers.get(Constant.position).image_url);
-                }catch (Exception e){
-                    BuyPremiumActivity.start(ActivityCategoryDetails.this, null);
+//                    BuyPremiumActivity.start(ActivityCategoryDetails.this, wallpapers.get(Constant.position).image_url);
+                    VideoAd.start(ActivityCategoryDetails.this, wallpapers.get(Constant.position).image_url);
+
+                } catch (Exception e) {
+
+//                    BuyPremiumActivity.start(ActivityCategoryDetails.this, null);
+                    VideoAd.start(ActivityCategoryDetails.this, null);
                 }
 
             }
@@ -191,20 +242,21 @@ public class ActivityCategoryDetails extends AppCompatActivity {
     private void requestListPostApi(final int page_no) {
         currentPage = page_no;
         ApiInterface apiInterface = RestAdapter.createAPI(sharedPref.getBaseUrl());
+        callbackCall = apiInterface.getCategoryDetails(page_no, PAGE_SIZE, category.category_id, Constant.FILTER, Constant.ORDER);
 
-        if (sharedPref.getWallpaperColumns() == 3) {
-            callbackCall = apiInterface.getCategoryDetails(page_no, Constant.LOAD_MORE_3_COLUMNS, category.category_id, Constant.FILTER, Constant.ORDER);
-        } else {
-            callbackCall = apiInterface.getCategoryDetails(page_no, Constant.LOAD_MORE_2_COLUMNS, category.category_id, Constant.FILTER, Constant.ORDER);
-        }
-
+        String apiUrl = callbackCall.request().url().toString();
+        Log.d(TAG, "requestListPostApi: url: " + apiUrl);
         callbackCall.enqueue(new Callback<CallbackWallpaper>() {
             @Override
             public void onResponse(Call<CallbackWallpaper> call, Response<CallbackWallpaper> response) {
                 CallbackWallpaper resp = response.body();
                 if (resp != null && resp.status.equals("ok")) {
+                    isLoading = false;
+                    currentPage++;
                     postTotal = resp.count_total;
                     displayApiResult(resp.posts);
+                    wallpaperList.addAll(resp.posts);
+                    displayApiResult(wallpaperList);
                     if (page_no == 1)
                         dbHelper.truncateTableWallpaper(DBHelper.TABLE_CATEGORY_DETAIL);
                     dbHelper.addListWallpaper(resp.posts, DBHelper.TABLE_CATEGORY_DETAIL);
@@ -217,6 +269,7 @@ public class ActivityCategoryDetails extends AppCompatActivity {
             public void onFailure(Call<CallbackWallpaper> call, Throwable t) {
                 swipeProgress(false);
                 loadDataFromDatabase(call, page_no);
+                isLoading = false;
             }
         });
     }
@@ -230,7 +283,7 @@ public class ActivityCategoryDetails extends AppCompatActivity {
     }
 
     private void insertData(List<Wallpaper> wallpapers) {
-            adapterWallpaper.insertData(currentPage,wallpapers);
+        adapterWallpaper.insertData(currentPage, wallpapers);
 
     }
 
@@ -242,11 +295,13 @@ public class ActivityCategoryDetails extends AppCompatActivity {
         showFailedView(true, getString(R.string.failed_text));
     }
 
-    private void requestAction() {
+    private void requestAction(final int page_no) {
+        isLoading = true;
+        currentPage = page_no;
         showFailedView(false, "");
         showNoItemView(false);
         swipeProgress(true);
-        requestListPostApi(1); // Directly call the method with page number 1
+        requestListPostApi(currentPage); // Directly call the method with page number 1
     }
 
 
@@ -260,7 +315,7 @@ public class ActivityCategoryDetails extends AppCompatActivity {
             recyclerView.setVisibility(View.VISIBLE);
             lyt_failed.setVisibility(View.GONE);
         }
-        findViewById(R.id.failed_retry).setOnClickListener(view -> requestAction());
+        findViewById(R.id.failed_retry).setOnClickListener(view -> requestAction(failedPage));
     }
 
     private void showNoItemView(boolean show) {
@@ -268,7 +323,7 @@ public class ActivityCategoryDetails extends AppCompatActivity {
         ((TextView) findViewById(R.id.no_item_message)).setText(R.string.msg_no_item);
         if (show) {
             recyclerView.setVisibility(View.GONE);
-            lyt_no_item.setVisibility(View.VISIBLE);
+            lyt_no_item.setVisibility(View.GONE);
         } else {
             recyclerView.setVisibility(View.VISIBLE);
             lyt_no_item.setVisibility(View.GONE);
@@ -283,6 +338,7 @@ public class ActivityCategoryDetails extends AppCompatActivity {
             showShimmerLayout();
         }
     }
+
     private void showShimmerLayout() {
         recyclerView.setVisibility(View.GONE);
         lytShimmer.setVisibility(View.VISIBLE);
@@ -294,6 +350,7 @@ public class ActivityCategoryDetails extends AppCompatActivity {
         lytShimmer.setVisibility(View.GONE);
         lytShimmer.stopShimmer();
     }
+
     public void initShimmerLayout() {
         View view_shimmer_2_columns = findViewById(R.id.view_shimmer_2_columns);
         View view_shimmer_3_columns = findViewById(R.id.view_shimmer_3_columns);
@@ -345,7 +402,8 @@ public class ActivityCategoryDetails extends AppCompatActivity {
                     if (Tools.isConnect(this)) {
                         dbHelper.deleteWallpaperByCategory(DBHelper.TABLE_CATEGORY_DETAIL, category.category_id);
                     }
-                    requestAction();
+                    currentPage = 1;
+                    requestAction(currentPage);
                     dialog.dismiss();
                 });
                 alert.setNegativeButton(R.string.dialog_option_cancel, (dialog, i) -> {

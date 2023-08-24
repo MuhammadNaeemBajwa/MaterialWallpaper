@@ -61,7 +61,6 @@ public class AdapterWallpaper2 extends RecyclerView.Adapter<RecyclerView.ViewHol
     AdsPref adsPref;
     List<Wallpaper> list;
 
-
     public AdapterWallpaper2(Context context, List<Wallpaper> list, OnItemClickListener listener) {
         this.context = context;
         this.list = list;
@@ -105,7 +104,8 @@ public class AdapterWallpaper2 extends RecyclerView.Adapter<RecyclerView.ViewHol
             vItem.wallpaper_name.setText(p.image_name);
             vItem.category_name.setText(p.category_name);
             if(MyApplication.getApp().isPremium()){
-                vItem.premium_lock.setImageResource(R.drawable.unlock);
+//                vItem.premium_lock.setImageResource(R.drawable.unlock);
+                vItem.premium_lock.setImageResource(R.drawable.green_smiley);
             }
             vItem.premium_lock.setVisibility(p.isPremium() ? View.VISIBLE : View.GONE);
 

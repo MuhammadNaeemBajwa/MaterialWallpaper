@@ -168,7 +168,6 @@ public class WallpaperHelper {
     }
 
 
-
     public void showSuccessDialog(String message, AdsManager adsManager) {
 
         View lytSuccess = activity.findViewById(R.id.lyt_success);
@@ -193,7 +192,8 @@ public class WallpaperHelper {
             public void onTick(long millisUntilFinished) {
                 int second = (int) (millisUntilFinished / 1000);
                 if (second == 1) {
-                    adsManager.showInterstitialAd();
+                    // this was showing banner add when user applying wallpaper on home screen then ad was showing and then done layut apperaing
+//                    adsManager.showInterstitialAd();
                 }
                 if (second == 3) {
                     lytPleaseWait.setVisibility(View.VISIBLE);
@@ -225,7 +225,6 @@ public class WallpaperHelper {
 //        });
 
 
-
         //Added by hasnain on 8/7/2023 to avoid a crash
 
 
@@ -246,10 +245,6 @@ public class WallpaperHelper {
                         });
             }
         });
-
-
-
-
     }
 
     public void setGif(View view, ProgressDialog progressDialog, String imageURL) {
@@ -386,6 +381,7 @@ public class WallpaperHelper {
     }
 
     public void downloadWallpaper(Wallpaper wallpaper, ProgressDialog progressDialog, AdsManager adsManager, String imageURL) {
+        Log.d(TAG, "downloadWallpaper: wallpaper: " + wallpaper);
 
         progressDialog.setMessage(activity.getString(R.string.snack_bar_saving));
         progressDialog.setCancelable(false);
@@ -450,12 +446,13 @@ public class WallpaperHelper {
     }
 
     public void updateView(String image_id) {
+        Log.d(TAG, "updateView: image:" + image_id);
         ApiInterface apiInterface = RestAdapter.createAPI(sharedPref.getBaseUrl());
         Call<Wallpaper> call = apiInterface.updateView(image_id);
         call.enqueue(new Callback<Wallpaper>() {
             @Override
             public void onResponse(Call<Wallpaper> call, Response<Wallpaper> response) {
-                Log.d(TAG, "success update view");
+                Log.d(TAG, "success update view: res: " + response);
             }
 
             @Override
@@ -466,17 +463,18 @@ public class WallpaperHelper {
     }
 
     public void updateDownload(String image_id) {
+        Log.d(TAG, "updateDownload: image_id: " + image_id);
         ApiInterface apiInterface = RestAdapter.createAPI(sharedPref.getBaseUrl());
         Call<Wallpaper> call = apiInterface.updateDownload(image_id);
         call.enqueue(new Callback<Wallpaper>() {
             @Override
             public void onResponse(Call<Wallpaper> call, Response<Wallpaper> response) {
-                Log.d(TAG, "success update download");
+                Log.d(TAG, "success update download: response: " + response);
             }
 
             @Override
             public void onFailure(Call<Wallpaper> call, Throwable t) {
-                Log.d(TAG, "failed update download");
+                Log.d(TAG, "failed update download: error: " + t.getMessage());
             }
         });
     }
@@ -504,10 +502,10 @@ public class WallpaperHelper {
 
     public void deleteVideoWallpaper(Wallpaper wallpaper) {
 
-            File videoFile = new File(wallpaper.image_url);
-            if (videoFile.exists()) {
-                videoFile.delete();
-            }
+        File videoFile = new File(wallpaper.image_url);
+        if (videoFile.exists()) {
+            videoFile.delete();
+        }
         SingletonEventBus.getInstance().post(new EventWallpaper(wallpaper, EventWallpaper.ACTION_DELETE_WALLPAPER));
     }
 }
