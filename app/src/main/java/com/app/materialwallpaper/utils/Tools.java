@@ -465,17 +465,6 @@ public class Tools {
     }
 
     public static void showWarningDialog(Activity activity, String title, String message) {
-
-        // added on 8/7/2023 By Hasnain to resolve Crash
-        if (activity == null) {
-            // Log an error or handle the case when the context is null
-            Log.e("Tools", "Context is null in showWarningDialog()");
-            return;
-        }
-        // till here
-
-
-
         new AlertDialog.Builder(activity)
                 .setTitle(title)
                 .setMessage(message)

@@ -43,7 +43,6 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.app.materialwallpaper.BuildConfig;
 import com.app.materialwallpaper.Config;
 import com.app.materialwallpaper.R;
-import com.app.materialwallpaper.VideoAd.VideoAd;
 import com.app.materialwallpaper.adapters.AdapterTags;
 import com.app.materialwallpaper.adapters.AdapterWallpaperDetail;
 import com.app.materialwallpaper.databases.prefs.AdsPref;
@@ -54,8 +53,6 @@ import com.app.materialwallpaper.utils.AdsManager;
 import com.app.materialwallpaper.utils.Constant;
 import com.app.materialwallpaper.utils.Tools;
 import com.app.materialwallpaper.utils.WallpaperHelper;
-import com.dingmouren.videowallpaper.VideoWallpaper;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -148,15 +145,9 @@ public class ActivityWallpaperDetail extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-//                loadView(wallpapers, position);
+                loadView(wallpapers, position);
 
-// added on 8/22/2023 to avoid a crash
-                if (position >= 0 && position < wallpapers.size()) {
-                    loadView(wallpapers, position);
-                } else {
-                    // Handle the case where the position is out of bounds
-                }
-                // till here
+
             }
 
             @Override
@@ -169,18 +160,10 @@ public class ActivityWallpaperDetail extends AppCompatActivity {
 
     public void loadView(final List<Wallpaper> wallpapers, int position) {
 
-        // Added on 8/22/2023 by hasnain to resolve the crash
-//        if (wallpapers.isEmpty()) {
-        if (wallpapers.isEmpty() || position < 0 || position >= wallpapers.size()) {
-            // Handle the case when the wallpapers list is empty
-            return;
-        }
-        // till here
-
         Wallpaper wallpaper = wallpapers.get(position);
 
 
-        if (wallpaper.isVideoWallpaper()) {
+        if(wallpaper.isVideoWallpaper()) {
             findViewById(R.id.btn_favorite).setVisibility(View.INVISIBLE);
             findViewById(R.id.btn_info).setVisibility(View.INVISIBLE);
             findViewById(R.id.btn_delete_wallpaper).setVisibility(View.VISIBLE);
@@ -190,7 +173,7 @@ public class ActivityWallpaperDetail extends AppCompatActivity {
             findViewById(R.id.btn_delete_wallpaper).setVisibility(View.GONE);
         }
 
-        findViewById(R.id.btn_delete_wallpaper).setOnClickListener((v) -> {
+        findViewById(R.id.btn_delete_wallpaper).setOnClickListener((v)->{
             deleteWallpaper(this, wallpaper);
         });
 
@@ -203,18 +186,14 @@ public class ActivityWallpaperDetail extends AppCompatActivity {
             TextView title_toolbar = findViewById(R.id.title_toolbar);
             TextView sub_title_toolbar = findViewById(R.id.sub_title_toolbar);
             View premium = findViewById(R.id.viewPremium);
-            if (MyApplication.getApp().isPremium()) {
+            if(MyApplication.getApp().isPremium()) {
                 ImageView image = findViewById(R.id.imgPremium);
-//                image.setImageResource(R.drawable.unlock);
                 image.setImageResource(R.drawable.green_smiley);
             }
 
             premium.setVisibility(wallpaper.isPremium() ? View.VISIBLE : View.GONE);
-            premium.setOnClickListener((v) -> {
-
-//                BuyPremiumActivity.start(ActivityWallpaperDetail.this, wallpaper.image_url);
-                VideoAd.start(ActivityWallpaperDetail.this, wallpaper.image_url);
-
+            premium.setOnClickListener((v)->{
+                BuyPremiumActivity.start(ActivityWallpaperDetail.this, wallpaper.image_url);
             });
 
             if (!Config.ENABLE_DISPLAY_WALLPAPER_NAME) {
@@ -235,6 +214,7 @@ public class ActivityWallpaperDetail extends AppCompatActivity {
             }
 
             findViewById(R.id.btn_info).setOnClickListener(view -> showBottomSheetDialog(wallpaper));
+
 
 
             findViewById(R.id.btn_save).setVisibility(View.GONE);
@@ -262,10 +242,19 @@ public class ActivityWallpaperDetail extends AppCompatActivity {
 
             findViewById(R.id.btn_set_wallpaper).setOnClickListener(view -> {
 
+//                if (!verifyPermissions()) {
+//                    return;
+//                }
+                if (wallpaper.type.equals("upload")) {
+                    wallpaperHelper.downloadWallpaper(wallpaper, progressDialog, adsManager, UPLOAD_URL);
+                } else if (wallpaper.type.equals("url")) {
+                    wallpaperHelper.downloadWallpaper(wallpaper, progressDialog, adsManager, DIRECT_URL);
+                }
+
 //                if (!verifyAccess(wallpaper)) {
 //                    return;
 //                }
-                if (wallpaper.isVideoWallpaper()) {
+                if(wallpaper.isVideoWallpaper()) {
 
                     VideoWallpaper.setToWallPaper(ActivityWallpaperDetail.this, wallpaper.image_url);
                     return;
@@ -353,7 +342,7 @@ public class ActivityWallpaperDetail extends AppCompatActivity {
 
     private boolean verifyAccess(Wallpaper wallpaper) {
 
-        if (!wallpaper.isPremium()) return true;
+        if(!wallpaper.isPremium()) return true;
         // check if purchased
 
         if (!MyApplication.getApp().isPremium()) {
@@ -361,14 +350,14 @@ public class ActivityWallpaperDetail extends AppCompatActivity {
             builder.setView(R.layout.dialog_buy_premium);
             AlertDialog dialog = builder.create();
             dialog.show();
-            dialog.findViewById(R.id.btnCancel).setOnClickListener((v) -> dialog.dismiss());
-            dialog.findViewById(R.id.btnLearnMore).setOnClickListener((v) -> {
+            dialog.findViewById(R.id.btnCancel).setOnClickListener((v)->dialog.dismiss());
+            dialog.findViewById(R.id.btnLearnMore).setOnClickListener((v)->{
                 dialog.dismiss();
-                BuyPremiumActivity.start(ActivityWallpaperDetail.this, wallpaper != null ? wallpaper.image_url : null);
+                BuyPremiumActivity.start(ActivityWallpaperDetail.this,wallpaper !=null ? wallpaper.image_url:null);
             });
 
 
-        } else {
+        }else{
             return true;
         }
 

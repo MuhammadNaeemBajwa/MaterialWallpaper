@@ -10,8 +10,7 @@
         android:id="@+id/img_splash"
         android:layout_width="0dp"
         android:layout_height="0dp"
-
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:src="@drawable/new_splash_icon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

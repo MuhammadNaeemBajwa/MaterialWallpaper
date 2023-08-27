@@ -38,8 +38,10 @@ import com.app.materialwallpaper.rests.ApiInterface;
 import com.app.materialwallpaper.rests.RestAdapter;
 import com.app.materialwallpaper.utils.AdsManager;
 import com.app.materialwallpaper.utils.Constant;
+import com.app.materialwallpaper.utils.EventWallpaper;
 import com.app.materialwallpaper.utils.SingletonEventBus;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.common.eventbus.Subscribe;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -353,8 +355,10 @@ public class FragmentWallpaper2 extends Fragment {
     }
 
     private void requestListPostApi(final int page_no) {
+        Log.d(TAG, "requestListPostApi: Requesting Wallpapers Page: " + page_no);
         ApiInterface apiInterface = RestAdapter.createAPI(sharedPref.getBaseUrl());
 
+//        Log.d(TAG, "requestListPostApi: onItemChanged: filter: "+filter);
         callbackCall = apiInterface.getWallpapers(page_no, PAGE_SIZE, filter, order);
 
         callbackCall.enqueue(new Callback<CallbackWallpaper>() {
@@ -363,7 +367,7 @@ public class FragmentWallpaper2 extends Fragment {
                 CallbackWallpaper resp = response.body();
                 if (resp != null && resp.status.equals("ok")) {
                     isLoading = false;
-                    currentPage++;
+//                    currentPage++;
                     postTotal = resp.count_total;
                     //Log.d("Results : ", ARG_ORDER + " " + post_total);
                     wallpaperList.addAll(resp.posts);
@@ -487,6 +491,7 @@ public class FragmentWallpaper2 extends Fragment {
 
 
     private void loadMoreData() {
+        Log.d(TAG, "loadMoreData: onItemChanged: ");
         if (!isLoading && !isLastPage) {
             requestAction(currentPage);
         }
@@ -511,6 +516,33 @@ public class FragmentWallpaper2 extends Fragment {
         }
     }
 
+    @Subscribe
+    public void onEvent(EventWallpaper event) {
+        if (event.getAction() == EventWallpaper.ACTION_DELETE_WALLPAPER) {
+            currentPage = 1;
+            adapterWallpaper.clear();
+            requestAction(currentPage);
+        }
+    }
+
+    @Subscribe
+    public void onFilterChanged(String filter) {
+        if (filter.equalsIgnoreCase(Wallpaper.Price.ALL.value)) {
+            this.filter = Constant.FILTER_ALL;
+        } else if (filter.equalsIgnoreCase(Wallpaper.Price.FREE.value)) {
+            this.filter = Constant.FILTER_FREE;
+        } else if (filter.equalsIgnoreCase(Wallpaper.Price.PREMIUM.value)) {
+            this.filter = Constant.FILTER_PREMIUM;
+        }
+
+//        pagingIndicator.setVisibility(View.GONE);
+        adapterWallpaper.clear();
+        wallpaperList.clear();
+        Log.d(TAG, "onFilterChanged: call: onItemChanged: ");
+//        setLoadMore(1);
+        loadMoreData();
+
+    }
 
     @Override
     public void onDestroy() {

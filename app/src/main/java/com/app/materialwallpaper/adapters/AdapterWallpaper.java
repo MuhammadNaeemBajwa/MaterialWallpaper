@@ -132,7 +132,8 @@ public class AdapterWallpaper extends RecyclerView.Adapter<RecyclerView.ViewHold
         LinearLayout bg_shadow;
         ProgressBar progress_bar;
         FrameLayout lyt_parent;
-        AppCompatImageButton premium_lock;
+//        AppCompatImageButton premium_lock;
+        ImageView premium_lock;
 
         public OriginalViewHolder(View v) {
             super(v);

@@ -83,116 +83,48 @@ public class VideoWallpaper extends WallpaperService {
             registerReceiver(mVideoVoiceControlReceiver, intentFilter);
         }
 
-//        @Override
-//        public void onDestroy() {
-//            unregisterReceiver(mVideoVoiceControlReceiver);
-//            super.onDestroy();
-//        }
-//added on 8/22/2023 by hasnain
         @Override
         public void onDestroy() {
-            if (mMediaPlayer != null) {
-                mMediaPlayer.release();
-                mMediaPlayer = null;
-            }
             unregisterReceiver(mVideoVoiceControlReceiver);
             super.onDestroy();
         }
 
         @Override
         public void onVisibilityChanged(boolean visible) {
-            if (TextUtils.isEmpty(sVideoPath) || mMediaPlayer == null) {
+            if (TextUtils.isEmpty(sVideoPath)) {
                 Log.d("==w", "videoPath为空");
                 return;
             }
-
-            //Added on 8/22/2023 By hasnain to avoid crash
-            // Ensure mMediaPlayer is not null before calling its methods
-            //this
-//            if (mMediaPlayer != null) {
-
-            if (visible && mMediaPlayer.isPlaying()) {
+            if (visible) {
                 mMediaPlayer.start();
             } else {
                 mMediaPlayer.pause();
             }
-
-//            }
-            //till here
         }
-
-//        @Override
-//        public void onSurfaceCreated(SurfaceHolder holder) {
-//            super.onSurfaceCreated(holder);
-//            if (TextUtils.isEmpty(sVideoPath)) {
-//                //throw  new NullPointerException("videoPath must not be null ");
-//                Log.d("==w", "videoPath为空: " + sVideoPath);
-//            } else {
-//                mMediaPlayer = new MediaPlayer();
-//                mMediaPlayer.setSurface(holder.getSurface());
-//
-//                try {
-//
-//                    mMediaPlayer.setDataSource(sVideoPath);
-//                    mMediaPlayer.setLooping(true);
-//                    mMediaPlayer.setVolume(0f, 0f);
-//                    mMediaPlayer.prepare();
-//                    mMediaPlayer.start();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//        }
-
-//I have added this to resolve crash
 
         @Override
         public void onSurfaceCreated(SurfaceHolder holder) {
             super.onSurfaceCreated(holder);
             if (TextUtils.isEmpty(sVideoPath)) {
+                //throw  new NullPointerException("videoPath must not be null ");
                 Log.d("==w", "videoPath为空: " + sVideoPath);
-                return;
+            } else {
+                mMediaPlayer = new MediaPlayer();
+                mMediaPlayer.setSurface(holder.getSurface());
+
+                try {
+
+                    mMediaPlayer.setDataSource(sVideoPath);
+                    mMediaPlayer.setLooping(true);
+                    mMediaPlayer.setVolume(0f, 0f);
+                    mMediaPlayer.prepare();
+                    mMediaPlayer.start();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
-            mMediaPlayer = new MediaPlayer();
-            mMediaPlayer.setSurface(holder.getSurface());
-
-            try {
-                mMediaPlayer.setDataSource(sVideoPath);
-                mMediaPlayer.setLooping(true);
-                mMediaPlayer.setVolume(0f, 0f);
-//                mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//                    @Override
-//                    public void onPrepared(MediaPlayer mp) {
-//                        mMediaPlayer.start();
-//                    }
-//                });
-
-                mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mp) {
-                        // Start playback once prepared
-                        mMediaPlayer.start();
-                    }
-                });
-                mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-                    @Override
-                    public boolean onError(MediaPlayer mp, int what, int extra) {
-                        // Handle errors here, you can log or handle them as needed
-                        return false;
-                    }
-                });
-//                mMediaPlayer.prepareAsync(); // Start async preparation
-
-                mMediaPlayer.prepareAsync(); // Use prepareAsync to avoid blocking the UI thread
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
-
-        //Till here
-
 
         @Override
         public void onSurfaceChanged(SurfaceHolder holder, int format, int width, int height) {

@@ -174,7 +174,7 @@ public class ActivitySearch extends AppCompatActivity {
             lytSuggestion.setVisibility(View.GONE);
             hideKeyboard();
             currentPage = 1;
-            searchActionWallpaper( currentPage);
+            searchActionWallpaper(currentPage);
         });
 
         btClear.setOnClickListener(view -> edtSearch.setText(""));
@@ -256,10 +256,10 @@ public class ActivitySearch extends AppCompatActivity {
             Constant.wallpapers.clear();
             Constant.wallpapers.addAll(adapterWallpaper.getCurrentItems());
             Constant.position = position;
-            if(Constant.wallpapers.get(position).isPremium() && !MyApplication.getApp().isPremium()){
+            if (Constant.wallpapers.get(position).isPremium() && !MyApplication.getApp().isPremium()) {
 //                BuyPremiumActivity.start(ActivitySearch.this, null);
                 VideoAd.start(ActivitySearch.this, null);
-            }else {
+            } else {
                 Intent intent = new Intent(ActivitySearch.this, ActivityWallpaperDetail.class);
                 startActivity(intent);
             }
@@ -321,13 +321,12 @@ public class ActivitySearch extends AppCompatActivity {
                     adapterWallpaper.resetListData();
                     hideKeyboard();
                     currentPage = 1;
-                    searchActionWallpaper( currentPage);
+                    searchActionWallpaper(currentPage);
                 }
                 return true;
             }
             return false;
         });
-
 
 
     }
@@ -341,19 +340,22 @@ public class ActivitySearch extends AppCompatActivity {
         }
         return firstVisibleItem;
     }
+
     private void loadMoreData() {
         if (!isLoading && !isLastPage) {
             requestAction(currentPage);
         }
     }
+
     private void requestAction(final int page_no) {
         isLoading = true;
         currentPage = page_no;
         showFailedView(false, "");
         showNoItemView(false);
         swipeProgress(true);
-        requestSearchApiWallpaper(currentPage,"10"); // Directly call the method with page number 1
+        requestSearchApiWallpaper(currentPage, "10"); // Directly call the method with page number 1
     }
+
     private void showFailedView(boolean show, String message) {
         View lyt_failed = findViewById(R.id.lyt_failed);
         ((TextView) findViewById(R.id.failed_message)).setText(message);
@@ -478,6 +480,7 @@ public class ActivitySearch extends AppCompatActivity {
         public void afterTextChanged(Editable editable) {
         }
     };
+
     private void displayApiResult(final List<Wallpaper> wallpapers) {
         insertData(wallpapers);
         swipeProgress(false);
@@ -486,6 +489,7 @@ public class ActivitySearch extends AppCompatActivity {
         }
 
     }
+
     private void insertData(List<Wallpaper> wallpapers) {
         adapterWallpaper.insertData(currentPage, wallpapers);
 
@@ -497,7 +501,7 @@ public class ActivitySearch extends AppCompatActivity {
 //        if (sharedPref.getWallpaperColumns() == 3) {
 //            callbackCallWallpaper = apiInterface.getSearch(page_no, FragmentWallpaper2.WALLPAPER_PER_PAGE, query, Constant.ORDER_RECENT);
 //        } else {
-            callbackCallWallpaper = apiInterface.getSearch(page_no, WALLPAPER_PER_PAGE, query, Constant.ORDER_RECENT);
+        callbackCallWallpaper = apiInterface.getSearch(page_no, WALLPAPER_PER_PAGE, query, Constant.ORDER_RECENT);
         //}
         swipeProgress(true);
         callbackCallWallpaper.enqueue(new Callback<CallbackWallpaper>() {
@@ -506,15 +510,14 @@ public class ActivitySearch extends AppCompatActivity {
                 CallbackWallpaper resp = response.body();
                 swipeProgress(false);
                 if (resp != null && resp.status.equals("ok")) {
-                    postTotal = resp.count_total;
+//                    postTotal = resp.count_total;
                     isLoading = false;
                     currentPage++;
                     postTotal = resp.count_total;
                     displayApiResult(resp.posts);
                     wallpaperList.addAll(resp.posts);
                     displayApiResult(wallpaperList);
-
-                        adapterWallpaper.insertData(currentPage, resp.posts);
+//                    adapterWallpaper.insertData(currentPage, resp.posts);
 //                    }
                     if (resp.posts.size() == 0) {
                         showNotFoundViewWallpaper(true);

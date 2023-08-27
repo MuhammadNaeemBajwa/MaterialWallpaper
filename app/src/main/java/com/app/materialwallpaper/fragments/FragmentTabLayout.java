@@ -81,9 +81,8 @@ public class FragmentTabLayout extends Fragment {
         filterDropDown.setOnItemChangedListener(new CustomFilterDropDown.OnItemChangedListener() {
             @Override
             public void onItemChanged(String text) {
+                Log.d(TAG, "onItemChanged: text: "+text);
                 SingletonEventBus.getInstance().post(text);
-                Log.d(TAG, "onItemChanged: text: " +text);
-
             }
 
             @Override

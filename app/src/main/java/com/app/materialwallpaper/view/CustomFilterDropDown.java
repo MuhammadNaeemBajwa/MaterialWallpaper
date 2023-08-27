@@ -43,6 +43,7 @@ public class CustomFilterDropDown extends FrameLayout {
     void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.custom_dropdown, this);
 
+
         View popupView = LayoutInflater.from(getContext()).inflate(R.layout.premium_free_dropdown, null);
         MWPopupWindow mwPopupWindow = new MWPopupWindow(popupView);
         ExpandableLayout expandableLayout = findViewById(R.id.expandable);

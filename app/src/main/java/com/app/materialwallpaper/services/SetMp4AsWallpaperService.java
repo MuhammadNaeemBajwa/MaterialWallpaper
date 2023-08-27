@@ -19,8 +19,8 @@ public class SetMp4AsWallpaperService extends WallpaperService {
     class VideoEngine extends WallpaperService.Engine {
 
         private final String TAG = "LiveWallpaper";
-//        private final MediaPlayer mediaPlayer;
-        MediaPlayer mediaPlayer = new MediaPlayer();
+        private final MediaPlayer mediaPlayer;
+
         public VideoEngine() {
             super();
             Log.i(TAG, "(VideoEngine)");
@@ -28,44 +28,20 @@ public class SetMp4AsWallpaperService extends WallpaperService {
             String url = sharedPref.getMp4Path() + "/" + sharedPref.getMp4Name();
             MediaPlayer create = MediaPlayer.create(SetMp4AsWallpaperService.this, Uri.parse(url));
             this.mediaPlayer = create;
-//            create.setLooping(true);
-            //added on 8/7/2023 to resolve crash
-            if (mediaPlayer != null) {
-                create.setLooping(true);
-            }
+            create.setLooping(true);
         }
 
-//        public void onSurfaceCreated(SurfaceHolder holder) {
-//            Log.i(this.TAG, "onSurfaceCreated");
-//            this.mediaPlayer.setSurface(holder.getSurface());
-//            this.mediaPlayer.start();
-//        }
-
-
-        //added on 8/22/2023 by hasnain to avoid crash
         public void onSurfaceCreated(SurfaceHolder holder) {
-            Log.i(TAG, "onSurfaceCreated");
-            if (mediaPlayer != null) {
-                mediaPlayer.setSurface(holder.getSurface());
-                mediaPlayer.start();
-            }
+            Log.i(this.TAG, "onSurfaceCreated");
+            this.mediaPlayer.setSurface(holder.getSurface());
+            this.mediaPlayer.start();
         }
-
-//        public void onSurfaceDestroyed(SurfaceHolder holder) {
-//            Log.i(this.TAG, "( INativeWallpaperEngine ): onSurfaceDestroyed");
-//            SetMp4AsWallpaperService.playHeadTime = this.mediaPlayer.getCurrentPosition();
-//            this.mediaPlayer.reset();
-//            this.mediaPlayer.release();
-//        }
 
         public void onSurfaceDestroyed(SurfaceHolder holder) {
-            Log.i(TAG, "onSurfaceDestroyed");
-            if (mediaPlayer != null) {
-                SetMp4AsWallpaperService.playHeadTime = mediaPlayer.getCurrentPosition();
-                mediaPlayer.reset();
-                mediaPlayer.release();
-                mediaPlayer = null;
-            }
+            Log.i(this.TAG, "( INativeWallpaperEngine ): onSurfaceDestroyed");
+            SetMp4AsWallpaperService.playHeadTime = this.mediaPlayer.getCurrentPosition();
+            this.mediaPlayer.reset();
+            this.mediaPlayer.release();
         }
     }
 }

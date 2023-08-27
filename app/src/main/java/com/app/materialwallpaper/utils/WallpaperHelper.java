@@ -147,26 +147,12 @@ public class WallpaperHelper {
                 }), DELAY_SET);
     }
 
-//    public void onWallpaperApplied(ProgressDialog progressDialog, AdsManager adsManager, String message) {
-//        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-//            showSuccessDialog(message, adsManager);
-//            progressDialog.dismiss();
-//        }, DELAY_SET);
-//    }
-
-
-    //Added on 8/7/2023 By Hasnain To avoid Crash
     public void onWallpaperApplied(ProgressDialog progressDialog, AdsManager adsManager, String message) {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            if (!activity.isFinishing() && progressDialog.isShowing()) {
-                showSuccessDialog(message, adsManager);
-                if (!activity.isFinishing()) {
-                    progressDialog.dismiss();
-                }
-            }
+            showSuccessDialog(message, adsManager);
+            progressDialog.dismiss();
         }, DELAY_SET);
     }
-
 
     public void showSuccessDialog(String message, AdsManager adsManager) {
 
@@ -192,8 +178,7 @@ public class WallpaperHelper {
             public void onTick(long millisUntilFinished) {
                 int second = (int) (millisUntilFinished / 1000);
                 if (second == 1) {
-                    // this was showing banner add when user applying wallpaper on home screen then ad was showing and then done layut apperaing
-//                    adsManager.showInterstitialAd();
+                    adsManager.showInterstitialAd();
                 }
                 if (second == 3) {
                     lytPleaseWait.setVisibility(View.VISIBLE);
@@ -207,44 +192,23 @@ public class WallpaperHelper {
 
         }.start();
 
-//        btnDone.setOnClickListener(view -> {
-//            lytSuccess.animate()
-//                    .translationY(lytSuccess.getHeight())
-//                    //.alpha(0.0f)
-//                    .setDuration(200)
-//                    .setListener(new AnimatorListenerAdapter() {
-//                        @Override
-//                        public void onAnimationEnd(Animator animation) {
-//                            super.onAnimationEnd(animation);
-//                            lytSuccess.setVisibility(View.GONE);
-//                        }
-//                    });
-//
-//            //activity.finish();
-//            //adsManager.destroyBannerAd();
-//        });
-
-
-        //Added by hasnain on 8/7/2023 to avoid a crash
-
-
         btnDone.setOnClickListener(view -> {
-            if (!activity.isFinishing()) {
-                lytSuccess.animate()
-                        .translationY(lytSuccess.getHeight())
-                        //.alpha(0.0f)
-                        .setDuration(200)
-                        .setListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                super.onAnimationEnd(animation);
-                                if (!activity.isFinishing()) {
-                                    lytSuccess.setVisibility(View.GONE);
-                                }
-                            }
-                        });
-            }
+            lytSuccess.animate()
+                    .translationY(lytSuccess.getHeight())
+                    //.alpha(0.0f)
+                    .setDuration(200)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            lytSuccess.setVisibility(View.GONE);
+                        }
+                    });
+
+            //activity.finish();
+            //adsManager.destroyBannerAd();
         });
+
     }
 
     public void setGif(View view, ProgressDialog progressDialog, String imageURL) {
@@ -381,7 +345,8 @@ public class WallpaperHelper {
     }
 
     public void downloadWallpaper(Wallpaper wallpaper, ProgressDialog progressDialog, AdsManager adsManager, String imageURL) {
-        Log.d(TAG, "downloadWallpaper: wallpaper: " + wallpaper);
+        Log.d(TAG, "downloadWallpaper: ");
+
 
         progressDialog.setMessage(activity.getString(R.string.snack_bar_saving));
         progressDialog.setCancelable(false);
@@ -446,13 +411,12 @@ public class WallpaperHelper {
     }
 
     public void updateView(String image_id) {
-        Log.d(TAG, "updateView: image:" + image_id);
         ApiInterface apiInterface = RestAdapter.createAPI(sharedPref.getBaseUrl());
         Call<Wallpaper> call = apiInterface.updateView(image_id);
         call.enqueue(new Callback<Wallpaper>() {
             @Override
             public void onResponse(Call<Wallpaper> call, Response<Wallpaper> response) {
-                Log.d(TAG, "success update view: res: " + response);
+                Log.d(TAG, "success update view");
             }
 
             @Override
@@ -463,18 +427,22 @@ public class WallpaperHelper {
     }
 
     public void updateDownload(String image_id) {
-        Log.d(TAG, "updateDownload: image_id: " + image_id);
+        Log.d(TAG, "updateDownload: called with image_id: " + image_id);
         ApiInterface apiInterface = RestAdapter.createAPI(sharedPref.getBaseUrl());
         Call<Wallpaper> call = apiInterface.updateDownload(image_id);
         call.enqueue(new Callback<Wallpaper>() {
             @Override
             public void onResponse(Call<Wallpaper> call, Response<Wallpaper> response) {
-                Log.d(TAG, "success update download: response: " + response);
+                if (response.isSuccessful()) {
+                    Log.d(TAG, "updateDownload API success");
+                } else {
+                    Log.d(TAG, "updateDownload API failed: " + response.message());
+                }
             }
 
             @Override
             public void onFailure(Call<Wallpaper> call, Throwable t) {
-                Log.d(TAG, "failed update download: error: " + t.getMessage());
+                Log.e(TAG, "updateDownload API failure: " + t.getMessage());
             }
         });
     }

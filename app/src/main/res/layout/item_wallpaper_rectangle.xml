@@ -107,20 +107,24 @@
                     </LinearLayout>
 
                 </LinearLayout>
-                <androidx.appcompat.widget.AppCompatImageButton
+
+<!--                android:background="@drawable/ad_background"-->
+                <ImageView
                     android:layout_width="wrap_content"
                     android:gravity="center"
                     android:id="@+id/premium_lock"
-                    android:background="@drawable/lock_bg"
-                    android:layout_marginTop="-5dp"
+                    android:layout_marginTop="-3dp"
                     android:visibility="gone"
-                    android:layout_marginRight="-5dp"
+
+                    android:layout_marginRight="-2dp"
+
                     android:src="@drawable/ad_vector"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
                     android:layout_height="wrap_content">
 
-                </androidx.appcompat.widget.AppCompatImageButton>
+                </ImageView>
+
 
 
             </RelativeLayout>

@@ -3,6 +3,7 @@ package com.app.materialwallpaper.activities;
 import static com.app.materialwallpaper.activities.MyApplication.TAG;
 import static com.app.materialwallpaper.utils.Constant.EXTRA_OBJC;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -194,6 +195,7 @@ public class ActivityCategoryDetails extends AppCompatActivity {
         filterDropDown.setOnItemChangedListener(new CustomFilterDropDown.OnItemChangedListener() {
             @Override
             public void onItemChanged(String text) {
+                Log.d(TAG, "onItemChanged: text: "+text);
                 if (text.equalsIgnoreCase(Wallpaper.Price.ALL.value)) {
                     Log.d(TAG, "onItemChanged: all: " + (text.equalsIgnoreCase(Wallpaper.Price.ALL.value)));
                     Constant.FILTER = Constant.FILTER_ALL;
@@ -204,6 +206,7 @@ public class ActivityCategoryDetails extends AppCompatActivity {
                     Constant.FILTER = Constant.FILTER_PREMIUM;
                 }
                 adapterWallpaper.clear();
+                wallpaperList.clear();
                 setLoadMore(1);
 
             }
@@ -240,6 +243,7 @@ public class ActivityCategoryDetails extends AppCompatActivity {
     }
 
     private void requestListPostApi(final int page_no) {
+        Log.d(ContentValues.TAG, "requestListPostApi: category page no: " + page_no);
         currentPage = page_no;
         ApiInterface apiInterface = RestAdapter.createAPI(sharedPref.getBaseUrl());
         callbackCall = apiInterface.getCategoryDetails(page_no, PAGE_SIZE, category.category_id, Constant.FILTER, Constant.ORDER);
@@ -252,7 +256,7 @@ public class ActivityCategoryDetails extends AppCompatActivity {
                 CallbackWallpaper resp = response.body();
                 if (resp != null && resp.status.equals("ok")) {
                     isLoading = false;
-                    currentPage++;
+//                    currentPage++;
                     postTotal = resp.count_total;
                     displayApiResult(resp.posts);
                     wallpaperList.addAll(resp.posts);
