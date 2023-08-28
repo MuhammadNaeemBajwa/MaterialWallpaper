@@ -161,6 +161,7 @@ public class ActivityWallpaperDetail extends AppCompatActivity {
     public void loadView(final List<Wallpaper> wallpapers, int position) {
 
         Wallpaper wallpaper = wallpapers.get(position);
+        boolean isPremium = wallpaper.isPremium();
 
 
         if(wallpaper.isVideoWallpaper()) {
@@ -241,6 +242,7 @@ public class ActivityWallpaperDetail extends AppCompatActivity {
             });
 
             findViewById(R.id.btn_set_wallpaper).setOnClickListener(view -> {
+
 
 //                if (!verifyPermissions()) {
 //                    return;

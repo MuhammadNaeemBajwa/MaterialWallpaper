@@ -9,6 +9,7 @@ import static com.app.materialwallpaper.utils.Constant.SET_GIF;
 import static com.app.materialwallpaper.utils.Constant.SET_MP4;
 import static com.app.materialwallpaper.utils.Constant.SET_WITH;
 import static com.app.materialwallpaper.utils.Constant.SHARE;
+import static com.app.materialwallpaper.utils.Constant.position;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -37,6 +38,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.app.materialwallpaper.R;
+import com.app.materialwallpaper.activities.MyApplication;
 import com.app.materialwallpaper.databases.prefs.SharedPref;
 import com.app.materialwallpaper.models.Wallpaper;
 import com.app.materialwallpaper.rests.ApiInterface;
@@ -62,6 +64,7 @@ public class WallpaperHelper {
     private static final String TAG = "WallpaperHelper";
     Activity activity;
     SharedPref sharedPref;
+
 
     public WallpaperHelper(Activity activity) {
         this.activity = activity;
@@ -94,7 +97,6 @@ public class WallpaperHelper {
                     progressDialog.dismiss();
                 }
                 break;
-
             case BOTH:
                 try {
                     WallpaperManager wallpaperManager = WallpaperManager.getInstance(activity);
@@ -135,7 +137,6 @@ public class WallpaperHelper {
 
                     @Override
                     public void onLoadCleared(@Nullable Drawable placeholder) {
-
                     }
 
                     @Override
@@ -178,9 +179,20 @@ public class WallpaperHelper {
             public void onTick(long millisUntilFinished) {
                 int second = (int) (millisUntilFinished / 1000);
                 if (second == 1) {
-                    adsManager.showInterstitialAd();
+
+                    // added  on 8/28/2023 by Hasnain. Before facebook ad was showing when we applying premium wallpaper.
+                    //with this logic when user watch a video after that when we apply wallapper as home or lock screen
+                    // facebook ad will not shown.
+                    if (!Constant.wallpapers.get(position).isPremium() && !MyApplication.getApp().isPremium()) {
+                        adsManager.showInterstitialAd();
+                    } else {
+
+                    }
+
+
                 }
                 if (second == 3) {
+
                     lytPleaseWait.setVisibility(View.VISIBLE);
                 }
             }
@@ -367,7 +379,6 @@ public class WallpaperHelper {
                             Tools.setAction(activity, Tools.getBytesFromFile(resource), Tools.createName(imageURL), DOWNLOAD);
                             updateDownload(wallpaper.image_id);
                             onWallpaperApplied(progressDialog, adsManager, activity.getString(R.string.msg_success_saved));
-
                         } catch (IOException e) {
                             e.printStackTrace();
                             progressDialog.dismiss();
