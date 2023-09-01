@@ -78,7 +78,7 @@ public class FragmentWallpaper2 extends Fragment {
     private boolean isLoading = false;
     private final boolean isLastPage = false;
     private final List<Wallpaper> wallpaperList=new ArrayList<>();
-    private final int PAGE_SIZE = 50;
+    private final int PAGE_SIZE = 1480;
 
     @Override
     public void onAttach(@NonNull Context context) {

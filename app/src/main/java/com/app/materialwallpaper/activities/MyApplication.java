@@ -56,8 +56,8 @@ import retrofit2.Response;
 public class MyApplication extends Application implements Application.ActivityLifecycleCallbacks {
 
     public static final String TAG = "MyApplication";
-    public static final String SKU_PREMIUM_UPGRADE = "remove_ad";
-//    public static final String SKU_PREMIUM_UPGRADE = "premium";
+    //    public static final String SKU_PREMIUM_UPGRADE = "remove_ad";
+    public static final String SKU_PREMIUM_UPGRADE = "premium";
 
     private AppOpenAdMob appOpenAdMob;
     private AppOpenAdManager appOpenAdManager;
@@ -76,9 +76,11 @@ public class MyApplication extends Application implements Application.ActivityLi
     private SharedPref sharedPref;
 
     public static MyApplication getApp() {
-       return app;
+        return app;
     }
+
     private static MyApplication app;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -164,7 +166,7 @@ public class MyApplication extends Application implements Application.ActivityLi
 //        builder.setMessage(message);
 //        builder.setPositiveButton("Restart", (dialog, which) -> {
         Toast.makeText(this, getString(R.string.thanks_for_purchase), Toast.LENGTH_SHORT).show();
-            restartApp();
+        restartApp();
 //        });
 //        builder.create().show();
     }
@@ -176,11 +178,11 @@ public class MyApplication extends Application implements Application.ActivityLi
         Runtime.getRuntime().exit(0);
     }
 
-    public void purchasePremium(Activity activity){
+    public void purchasePremium(Activity activity) {
         bp.purchase(activity, SKU_PREMIUM_UPGRADE);
     }
 
-    private void  initNotification() {
+    private void initNotification() {
         OneSignal.disablePush(false);
         Log.d(TAG, "OneSignal Notification is enabled");
 
@@ -232,7 +234,7 @@ public class MyApplication extends Application implements Application.ActivityLi
                         FirebaseMessaging.getInstance().subscribeToTopic(settings.fcm_notification_topic);
                         OneSignal.setAppId(settings.onesignal_app_id);
 
-                        Log.d(TAG, "OneSignal Device State : " +  OneSignal.getDeviceState().getPushToken());
+                        Log.d(TAG, "OneSignal Device State : " + OneSignal.getDeviceState().getPushToken());
 
                         Log.d(TAG, "OneSignal App ID : " + settings.onesignal_app_id);
                         Log.d(TAG, "FCM notification topic : " + settings.fcm_notification_topic);

@@ -182,7 +182,11 @@ public class VideoAd extends AppCompatActivity {
         context.startActivity(intent);
     }
     private void setText(final List<Wallpaper> wallpapers, int position){
-        Log.d(TAG, "loadView: ");
+        Log.d(TAG, "setText: ");
+        if (wallpapers.isEmpty() || position < 0 || position >= wallpapers.size()) {
+            Log.d(TAG, "setText: Check: " + (wallpapers.isEmpty() || position < 0 || position >= wallpapers.size()));
+            return;
+        }
         Wallpaper wallpaper = wallpapers.get(position);
 
         if (wallpaper.image_name.equals("")) {

@@ -165,49 +165,36 @@ public class ActivitySplash extends AppCompatActivity {
     }
 
     private void requestAPI(String baseUrl) {
-        Log.d(TAG, "requestAPI: ");
         this.callbackCall = RestAdapter.createAPI(baseUrl).getSettings(BuildConfig.APPLICATION_ID);
         this.callbackCall.enqueue(new Callback<CallbackSettings>() {
-
-
             public void onResponse(Call<CallbackSettings> call, Response<CallbackSettings> response) {
                 CallbackSettings resp = response.body();
                 if (resp != null && resp.status.equals("ok")) {
-                    Log.d(TAG, "onResponse: check: " + (resp != null && resp.status.equals("ok")));
                     ads = resp.ads;
                     adStatus = resp.ads_status;
                     settings = resp.settings;
                     app = resp.app;
-
                     sharedPref.saveConfig(settings.privacy_policy, settings.more_apps_url, settings.copyright);
                     adsManager.saveAds(ads);
                     adsManager.saveAdStatus(adStatus);
                     sharedPref.saveMenuList(resp.menus);
-
-                    // Check if the 'app' object is not null before accessing the 'status' field
-                    if (app != null && app.status != null && app.status.equals("0")) {
-                        Intent intent = new Intent(getApplicationContext(), ActivityRedirect.class);
-                        intent.putExtra("redirect_url", app.redirect_url);
-                        startActivity(intent);
-                        finish();
-                        Log.d(TAG, "App is inactive, call redirect method");
-                    } else {
-                        startMainActivity();
-                        Log.d(TAG, "App is active");
-                    }
+                }
+                if (app.status != null && app.status.equals("0")) {
+                    Intent intent = new Intent(getApplicationContext(), ActivityRedirect.class);
+                    intent.putExtra("redirect_url", app.redirect_url);
+                    startActivity(intent);
+                    finish();
+                    Log.d(TAG, "App is inactive, call redirect method");
                 } else {
-                    // Handle the case when the response is null or the 'status' is not "ok"
-                    // For example, show an error dialog or handle the error gracefully
-                    Log.e(TAG, "Invalid response or status is not 'ok'");
-                    startMainActivity(); // or any other appropriate action
+                    startMainActivity();
+                    Log.d(TAG, "App is active");
                 }
             }
 
             public void onFailure(Call<CallbackSettings> call, Throwable th) {
                 Log.e("onFailure", "" + th.getMessage());
-                startMainActivity(); // or any other appropriate action
+                startMainActivity();
             }
-
         });
     }
 
