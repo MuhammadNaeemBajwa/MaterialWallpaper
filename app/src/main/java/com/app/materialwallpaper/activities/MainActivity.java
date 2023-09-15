@@ -396,67 +396,140 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+//    private void showBottomSheetExitDialog() {
+//        @SuppressLint("InflateParams") final View view = getLayoutInflater().inflate(R.layout.dialog_exit, null);
+//
+//        FrameLayout lytBottomSheet = view.findViewById(R.id.bottom_sheet);
+//        Button btnRate = view.findViewById(R.id.btn_rate);
+//        Button btnShare = view.findViewById(R.id.btn_share);
+//        Button btnExit = view.findViewById(R.id.btn_exit);
+//
+//        if (this.sharedPref.getIsDarkTheme()) {
+//            lytBottomSheet.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_rounded_dark));
+//        } else {
+//            lytBottomSheet.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_rounded_default));
+//        }
+//
+//
+//        btnRate.setOnClickListener(v -> {
+//            final String package_name = BuildConfig.APPLICATION_ID;
+//            try {
+//                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + package_name)));
+//            } catch (android.content.ActivityNotFoundException anfe) {
+//                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + package_name)));
+//            }
+//            mBottomSheetDialog.dismiss();
+//        });
+//
+//        btnShare.setOnClickListener(v -> {
+//            Intent intent = new Intent();
+//            intent.setAction(Intent.ACTION_SEND);
+//            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
+//            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text) + "\n" + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID);
+//            intent.setType("text/plain");
+//            startActivity(intent);
+//            mBottomSheetDialog.dismiss();
+//        });
+//
+//        btnExit.setOnClickListener(v -> {
+//            finish();
+//            destroyBannerAd();
+//            Constant.isAppOpen = false;
+//            mBottomSheetDialog.dismiss();
+//        });
+//
+//        if (Config.ENABLE_RTL_MODE) {
+//            if (sharedPref.getIsDarkTheme()) {
+//                mBottomSheetDialog = new BottomSheetDialog(this, R.style.SheetDialogDarkRtl);
+//            } else {
+//                mBottomSheetDialog = new BottomSheetDialog(this, R.style.SheetDialogLightRtl);
+//            }
+//        } else {
+//            if (sharedPref.getIsDarkTheme()) {
+//                mBottomSheetDialog = new BottomSheetDialog(this, R.style.SheetDialogDark);
+//            } else {
+//                mBottomSheetDialog = new BottomSheetDialog(this, R.style.SheetDialogLight);
+//            }
+//        }
+//        mBottomSheetDialog.setContentView(view);
+//
+//        mBottomSheetDialog.show();
+//        mBottomSheetDialog.setOnDismissListener(dialog -> mBottomSheetDialog = null);
+//
+//    }
+
+
+
+    //added on 9/14/2023 to avoid a crash
+
+
+
+
     private void showBottomSheetExitDialog() {
-        @SuppressLint("InflateParams") final View view = getLayoutInflater().inflate(R.layout.dialog_exit, null);
+        if (mBottomSheetDialog == null) {
+            @SuppressLint("InflateParams") final View view = getLayoutInflater().inflate(R.layout.dialog_exit, null);
 
-        FrameLayout lytBottomSheet = view.findViewById(R.id.bottom_sheet);
-        Button btnRate = view.findViewById(R.id.btn_rate);
-        Button btnShare = view.findViewById(R.id.btn_share);
-        Button btnExit = view.findViewById(R.id.btn_exit);
+            FrameLayout lytBottomSheet = view.findViewById(R.id.bottom_sheet);
+            Button btnRate = view.findViewById(R.id.btn_rate);
+            Button btnShare = view.findViewById(R.id.btn_share);
+            Button btnExit = view.findViewById(R.id.btn_exit);
 
-        if (this.sharedPref.getIsDarkTheme()) {
-            lytBottomSheet.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_rounded_dark));
-        } else {
-            lytBottomSheet.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_rounded_default));
-        }
-
-
-        btnRate.setOnClickListener(v -> {
-            final String package_name = BuildConfig.APPLICATION_ID;
-            try {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + package_name)));
-            } catch (android.content.ActivityNotFoundException anfe) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + package_name)));
-            }
-            mBottomSheetDialog.dismiss();
-        });
-
-        btnShare.setOnClickListener(v -> {
-            Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_SEND);
-            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
-            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text) + "\n" + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID);
-            intent.setType("text/plain");
-            startActivity(intent);
-            mBottomSheetDialog.dismiss();
-        });
-
-        btnExit.setOnClickListener(v -> {
-            finish();
-            destroyBannerAd();
-            Constant.isAppOpen = false;
-            mBottomSheetDialog.dismiss();
-        });
-
-        if (Config.ENABLE_RTL_MODE) {
-            if (sharedPref.getIsDarkTheme()) {
-                mBottomSheetDialog = new BottomSheetDialog(this, R.style.SheetDialogDarkRtl);
+            if (this.sharedPref.getIsDarkTheme()) {
+                lytBottomSheet.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_rounded_dark));
             } else {
-                mBottomSheetDialog = new BottomSheetDialog(this, R.style.SheetDialogLightRtl);
+                lytBottomSheet.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_rounded_default));
             }
-        } else {
-            if (sharedPref.getIsDarkTheme()) {
-                mBottomSheetDialog = new BottomSheetDialog(this, R.style.SheetDialogDark);
+
+            btnRate.setOnClickListener(v -> {
+                final String package_name = BuildConfig.APPLICATION_ID;
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + package_name)));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + package_name)));
+                }
+                mBottomSheetDialog.dismiss();
+            });
+
+            btnShare.setOnClickListener(v -> {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
+                intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text) + "\n" + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID);
+                intent.setType("text/plain");
+                startActivity(intent);
+                mBottomSheetDialog.dismiss();
+            });
+
+            btnExit.setOnClickListener(v -> {
+                finish();
+                destroyBannerAd();
+                Constant.isAppOpen = false;
+                mBottomSheetDialog.dismiss();
+            });
+
+            if (Config.ENABLE_RTL_MODE) {
+                if (sharedPref.getIsDarkTheme()) {
+                    mBottomSheetDialog = new BottomSheetDialog(this, R.style.SheetDialogDarkRtl);
+                } else {
+                    mBottomSheetDialog = new BottomSheetDialog(this, R.style.SheetDialogLightRtl);
+                }
             } else {
-                mBottomSheetDialog = new BottomSheetDialog(this, R.style.SheetDialogLight);
+                if (sharedPref.getIsDarkTheme()) {
+                    mBottomSheetDialog = new BottomSheetDialog(this, R.style.SheetDialogDark);
+                } else {
+                    mBottomSheetDialog = new BottomSheetDialog(this, R.style.SheetDialogLight);
+                }
             }
+            mBottomSheetDialog.setContentView(view);
         }
-        mBottomSheetDialog.setContentView(view);
 
         mBottomSheetDialog.show();
         mBottomSheetDialog.setOnDismissListener(dialog -> mBottomSheetDialog = null);
-
     }
+
+
+
+
 
     public void showSnackBar(String message) {
         Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_SHORT).show();

@@ -52,6 +52,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class AdapterWallpaper extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -452,14 +453,14 @@ public class AdapterWallpaper extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public void resetListData() {
-        //this.items.get(currentPage).clear();
+//        this.items.get(currentPage).clear();
         items.clear();
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return  items.get(currentPage) == null ? 0 : items.get(currentPage).size();
+        return  items.get(currentPage) == null ? 0 : Objects.requireNonNull(items.get(currentPage)).size();
     }
 
     @Override

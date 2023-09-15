@@ -83,22 +83,55 @@ public class VideoWallpaper extends WallpaperService {
             registerReceiver(mVideoVoiceControlReceiver, intentFilter);
         }
 
+//        @Override
+//        public void onDestroy() {
+//            unregisterReceiver(mVideoVoiceControlReceiver);
+//            super.onDestroy();
+//        }
+
+        //Added on 9/6/2023 to avoid a crash
+
         @Override
         public void onDestroy() {
-            unregisterReceiver(mVideoVoiceControlReceiver);
+            if (mVideoVoiceControlReceiver != null) {
+                unregisterReceiver(mVideoVoiceControlReceiver);
+                mVideoVoiceControlReceiver = null;
+            }
             super.onDestroy();
         }
 
+
+//        @Override
+//        public void onVisibilityChanged(boolean visible) {
+//            if (TextUtils.isEmpty(sVideoPath)) {
+//                Log.d("==w", "videoPath为空");
+//                return;
+//            }
+//            if (visible) {
+//                mMediaPlayer.start();
+//            } else {
+//                mMediaPlayer.pause();
+//            }
+//        }
+
+
+//added on 9/14 to remove crash
         @Override
         public void onVisibilityChanged(boolean visible) {
             if (TextUtils.isEmpty(sVideoPath)) {
                 Log.d("==w", "videoPath为空");
                 return;
             }
-            if (visible) {
-                mMediaPlayer.start();
+
+            if (mMediaPlayer != null) {
+                if (visible) {
+                    mMediaPlayer.start();
+                } else {
+                    mMediaPlayer.pause();
+                }
             } else {
-                mMediaPlayer.pause();
+                // Handle the case where mMediaPlayer is null.
+                // You can create a new MediaPlayer instance and set it up here.
             }
         }
 

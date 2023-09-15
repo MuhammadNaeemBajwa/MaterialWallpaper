@@ -57,14 +57,10 @@ public class VideoAd extends AppCompatActivity {
 
         initialize();
         setListener();
-//        loadRewardedAd();
         setText(Constant.wallpapers, Constant.position);
     }
 
-
-
     private void initialize() {
-        // Initialize AdMob
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
@@ -92,6 +88,14 @@ public class VideoAd extends AppCompatActivity {
                     isButtonClickable = false; // Disable the button
                     binding.watchAd.setEnabled(false); // Disable the button temporarily
                     Activity activityContext = VideoAd.this;
+
+                    // Check if the activity is finishing before showing the ProgressDialog
+                    if (!isFinishing()) {
+                        progressDialog = new ProgressDialog(activityContext);
+                        progressDialog.setMessage("Loading ad...");
+                        progressDialog.setCancelable(false);
+                        progressDialog.show();
+                    }
                     rewardedAd.show(activityContext, new OnUserEarnedRewardListener() {
                         @Override
                         public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
@@ -116,9 +120,8 @@ public class VideoAd extends AppCompatActivity {
                             Log.d(TAG, "ads: onAdFailedToShowFullScreenContent: adError:  " + adError);
                             // Called when ad fails to show.
                             Log.e("TAG", "Ad failed to show fullscreen content.");
-                            rewardedAd = null;
-//                            Intent intent = new Intent(getApplicationContext(), ActivityWallpaperDetail.class);
-//                            startActivity(intent);
+                            loadRewardedAd();
+
                         }
 
                         @Override
@@ -132,11 +135,7 @@ public class VideoAd extends AppCompatActivity {
                             // Called when ad is shown.
                             Log.d("TAG", "ads: Ad showed fullscreen content.");
                         }
-
-
                     });
-
-
                 }
                 else {
                     Log.d("TAG", "onClick: else: ");
@@ -147,10 +146,17 @@ public class VideoAd extends AppCompatActivity {
     private void loadRewardedAd() {
         Log.d("TAG", "ads: loadRewardedAd: ");
 
+        // Check if the activity is finishing before showing the ProgressDialog
+        if (isFinishing()) {
+            return;
+        }
+
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading ad...");
         progressDialog.setCancelable(false);
-        progressDialog.show();
+        if (!isFinishing()) {
+            progressDialog.show();
+        }
 
         // Load rewarded ad
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -160,17 +166,33 @@ public class VideoAd extends AppCompatActivity {
                     public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                         Log.d(TAG, "ads: onAdFailedToLoad: LoadAdError: " + loadAdError);
                         rewardedAd = null;
-                        progressDialog.dismiss();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (progressDialog != null && progressDialog.isShowing()) {
+                                    progressDialog.dismiss();
+                                }
+                            }
+                        });
                     }
+
                     @Override
                     public void onAdLoaded(@NonNull RewardedAd ad) {
                         Log.d(TAG, "ads: onAdLoaded: RewardedAd: " + ad);
                         rewardedAd = ad;
                         binding.watchAd.setEnabled(true);
-                        progressDialog.dismiss();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (progressDialog != null && progressDialog.isShowing()) {
+                                    progressDialog.dismiss();
+                                }
+                            }
+                        });
                     }
                 });
     }
+
     public void onPurchaseClicked(View view) {
         MyApplication.getApp().purchasePremium(this);
     }
@@ -197,6 +219,14 @@ public class VideoAd extends AppCompatActivity {
             binding.lifestyle.setText(wallpaper.category_name);
         }
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 
 

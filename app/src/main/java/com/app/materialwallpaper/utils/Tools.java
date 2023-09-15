@@ -465,12 +465,18 @@ public class Tools {
     }
 
     public static void showWarningDialog(Activity activity, String title, String message) {
-        new AlertDialog.Builder(activity)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(activity.getString(R.string.dialog_option_ok), (dialog, which) -> activity.finish())
-                .setCancelable(false)
-                .show();
+        if (activity != null) {
+            new AlertDialog.Builder(activity)
+                    .setTitle(title)
+                    .setMessage(message)
+                    .setPositiveButton(activity.getString(R.string.dialog_option_ok), (dialog, which) -> activity.finish())
+                    .setCancelable(false)
+                    .show();
+        } else {
+            Log.e("DialogHelper", "Activity is null when creating AlertDialog");
+            // Handle the error gracefully, e.g., show a message to the user or take appropriate action.
+        }
     }
+
 
 }

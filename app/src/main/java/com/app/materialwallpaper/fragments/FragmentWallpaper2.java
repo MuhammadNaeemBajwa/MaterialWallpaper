@@ -328,6 +328,8 @@ public class FragmentWallpaper2 extends Fragment {
         });
 
         requestAction(currentPage);
+
+
         return rootView;
     }
 

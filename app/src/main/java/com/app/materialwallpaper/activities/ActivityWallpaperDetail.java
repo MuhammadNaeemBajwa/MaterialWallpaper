@@ -1,5 +1,6 @@
 package com.app.materialwallpaper.activities;
 
+import static com.app.materialwallpaper.activities.MyApplication.TAG;
 import static com.app.materialwallpaper.utils.Constant.BOTH;
 import static com.app.materialwallpaper.utils.Constant.HOME_SCREEN;
 import static com.app.materialwallpaper.utils.Constant.LOCK_SCREEN;
@@ -18,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
@@ -159,6 +161,13 @@ public class ActivityWallpaperDetail extends AppCompatActivity {
     }
 
     public void loadView(final List<Wallpaper> wallpapers, int position) {
+        Log.d(TAG, "loadView: "+ position);
+        if (position < 0 || position >= wallpapers.size()) {
+            Log.d(TAG, "loadView: "+ (position < 0 || position >= wallpapers.size()));
+            // Handle the case where the position is out of bounds.
+            Log.d(TAG, "loadView: " + position);
+            return;
+        }
 
         Wallpaper wallpaper = wallpapers.get(position);
         boolean isPremium = wallpaper.isPremium();
