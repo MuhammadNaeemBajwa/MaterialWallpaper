@@ -78,7 +78,7 @@ public class FragmentWallpaper2 extends Fragment {
     private boolean isLoading = false;
     private final boolean isLastPage = false;
     private final List<Wallpaper> wallpaperList=new ArrayList<>();
-    private final int PAGE_SIZE = 1480;
+    private final int PAGE_SIZE = 2000;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -154,7 +154,7 @@ public class FragmentWallpaper2 extends Fragment {
 //    }
 
 
-// added on 8/22/2023 to remove crash
+// added on 10/11/2023 to remove crash
 
     private void copyVideoToAppFolder(Uri videoUri) {
         // Check if activity or videoUri is null

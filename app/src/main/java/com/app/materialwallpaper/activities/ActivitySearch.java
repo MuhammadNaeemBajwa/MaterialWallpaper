@@ -1,5 +1,6 @@
 package com.app.materialwallpaper.activities;
 
+import static com.app.materialwallpaper.activities.MainActivity.TAG;
 import static com.app.materialwallpaper.fragments.FragmentWallpaper2.WALLPAPER_PER_PAGE;
 import static com.app.materialwallpaper.utils.Constant.EXTRA_OBJC;
 import static com.solodroid.ads.sdk.util.Constant.ADMOB;
@@ -12,6 +13,7 @@ import static com.solodroid.ads.sdk.util.Constant.STARTAPP;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.media.metrics.LogSessionId;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -61,7 +63,9 @@ import com.app.materialwallpaper.utils.Constant;
 import com.app.materialwallpaper.utils.Tools;
 import com.app.materialwallpaper.view.HorizontalPagingIndicator;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.datatransport.runtime.firebase.transport.LogEventDropped;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -238,6 +242,7 @@ public class ActivitySearch extends AppCompatActivity {
     }
 
     public void requestSearchWallpaper() {
+        Log.d(TAG, "requestSearchWallpaper: ");
         edtIndex.setText("0");
         recyclerViewWallpaper.setVisibility(View.VISIBLE);
         recyclerViewCategory.setVisibility(View.GONE);
@@ -251,6 +256,7 @@ public class ActivitySearch extends AppCompatActivity {
         adapterWallpaper = new AdapterWallpaper(this, recyclerViewWallpaper);
         adapterWallpaper.insertData(1, wallpapers);
         adapterWallpaper.setCurPage(1);
+
         recyclerViewWallpaper.setAdapter(adapterWallpaper);
         adapterWallpaper.setOnItemClickListener((view, obj, position) -> {
             Constant.wallpapers.clear();
@@ -296,6 +302,8 @@ public class ActivitySearch extends AppCompatActivity {
                 }
             }
         });
+
+//        requestAction(currentPage);
 
 
         // detect when scroll reach bottom
@@ -348,6 +356,7 @@ public class ActivitySearch extends AppCompatActivity {
     }
 
     private void requestAction(final int page_no) {
+        Log.d(TAG, "requestAction: page_no: " +page_no);
         isLoading = true;
         currentPage = page_no;
         showFailedView(false, "");
@@ -382,7 +391,7 @@ public class ActivitySearch extends AppCompatActivity {
     }
 
     public void setLoadMoreNativeAd(int current_page) {
-        Log.d("page", "currentPage: " + current_page);
+        Log.d(TAG, "setLoadMoreNativeAd: " + current_page);
         // Assuming final total items equal to real post items plus the ad
         int totalItemBeforeAds = (adapterWallpaper.getItemCount() - current_page);
         if (postTotal > totalItemBeforeAds && current_page != 0) {
@@ -402,6 +411,7 @@ public class ActivitySearch extends AppCompatActivity {
     }
 
     public void requestSearchCategory() {
+        Log.d(TAG, "requestSearchCategory: ");
         edtIndex.setText("1");
         recyclerViewWallpaper.setVisibility(View.GONE);
         recyclerViewCategory.setVisibility(View.VISIBLE);
@@ -482,6 +492,7 @@ public class ActivitySearch extends AppCompatActivity {
     };
 
     private void displayApiResult(final List<Wallpaper> wallpapers) {
+        Log.d(TAG, "displayApiResult: wallpaper: " +wallpapers);
         insertData(wallpapers);
         swipeProgress(false);
         if (wallpapers.size() == 0) {
@@ -491,18 +502,23 @@ public class ActivitySearch extends AppCompatActivity {
     }
 
     private void insertData(List<Wallpaper> wallpapers) {
-        adapterWallpaper.insertData(currentPage, wallpapers);
+//        adapterWallpaper.insertData(currentPage, wallpapers);
+        if (wallpapers != null)
+            adapterWallpaper.insertData(currentPage, wallpapers);
 
     }
 
     private void requestSearchApiWallpaper(final int page_no, final String query) {
+        Log.d(TAG, "requestSearchApiWallpaper: page: "+ page_no );
         ApiInterface apiInterface = RestAdapter.createAPI(sharedPref.getBaseUrl());
 
 //        if (sharedPref.getWallpaperColumns() == 3) {
 //            callbackCallWallpaper = apiInterface.getSearch(page_no, FragmentWallpaper2.WALLPAPER_PER_PAGE, query, Constant.ORDER_RECENT);
 //        } else {
-        callbackCallWallpaper = apiInterface.getSearch(page_no, WALLPAPER_PER_PAGE, query, Constant.ORDER_RECENT);
-        //}
+//        callbackCallWallpaper = apiInterface.getSearch(page_no, WALLPAPER_PER_PAGE, query, Constant.ORDER_RECENT);
+        callbackCallWallpaper = apiInterface.getSearch(page_no, Integer.MAX_VALUE, query, Constant.ORDER_RECENT);
+        String apiUrl = callbackCallWallpaper.request().url().toString();
+                Log.d(TAG, "requestListPostApi: url: " + apiUrl);
         swipeProgress(true);
         callbackCallWallpaper.enqueue(new Callback<CallbackWallpaper>() {
             @Override
@@ -512,19 +528,24 @@ public class ActivitySearch extends AppCompatActivity {
                 if (resp != null && resp.status.equals("ok")) {
 //                    postTotal = resp.count_total;
                     isLoading = false;
-                    currentPage++;
+//                    currentPage++;
                     postTotal = resp.count_total;
                     displayApiResult(resp.posts);
+                    Log.d(TAG, "requestSearchApiWallpaper: onResponse: resp.posts: "+ new Gson().toJson(resp.posts));
                     wallpaperList.addAll(resp.posts);
                     displayApiResult(wallpaperList);
-//                    adapterWallpaper.insertData(currentPage, resp.posts);
+                    Log.d(TAG, "requestSearchApiWallpaper: onResponse: wallpaperList: "+ new Gson().toJson(wallpaperList));
+
+                                        adapterWallpaper.insertData(currentPage, resp.posts);
 //                    }
                     if (resp.posts.size() == 0) {
+                        Log.d(TAG, "requestSearchApiWallpaper: onResponse: size: " + resp.posts.size());
                         showNotFoundViewWallpaper(true);
                     } else {
                         lytBannerAd.setVisibility(View.VISIBLE);
                     }
                 } else {
+                    Log.d(TAG, "requestSearchApiWallpaper: onResponse: onFailure: " + new Gson().toJson(page_no) );
                     onFailRequestWallpaper(page_no);
                 }
                 swipeProgress(false);
@@ -538,6 +559,7 @@ public class ActivitySearch extends AppCompatActivity {
 
         });
     }
+
 
     private void requestSearchApiCategory(final String query) {
         ApiInterface apiInterface = RestAdapter.createAPI(sharedPref.getBaseUrl());
@@ -589,6 +611,7 @@ public class ActivitySearch extends AppCompatActivity {
     }
 
     private void searchActionWallpaper(final int page_no) {
+        Log.d(TAG, "searchActionWallpaper: ");
         lytSuggestion.setVisibility(View.GONE);
         showFailedViewWallpaper(false, "");
         showNotFoundViewWallpaper(false);
@@ -599,7 +622,10 @@ public class ActivitySearch extends AppCompatActivity {
             } else {
                 adapterWallpaper.setLoading();
             }
-            new Handler(Looper.getMainLooper()).postDelayed(() -> requestSearchApiWallpaper(page_no, query), Constant.DELAY_TIME);
+            new Handler(Looper.getMainLooper()).postDelayed(() -> 
+                    
+                    requestSearchApiWallpaper(page_no, query), Constant.DELAY_TIME);
+            Log.d(TAG, "searchActionWallpaper: page_no: " + page_no + ", query: " + query);
         } else {
             Snackbar.make(parentView, getString(R.string.msg_search_input), Snackbar.LENGTH_SHORT).show();
             swipeProgress(false);

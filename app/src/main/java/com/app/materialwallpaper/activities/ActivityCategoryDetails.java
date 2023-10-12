@@ -70,7 +70,7 @@ public class ActivityCategoryDetails extends AppCompatActivity {
     private boolean isLoading = false;
     private final boolean isLastPage = false;
     private final List<Wallpaper> wallpaperList = new ArrayList<>();
-    private final int PAGE_SIZE = 1480;
+    private final int PAGE_SIZE = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
