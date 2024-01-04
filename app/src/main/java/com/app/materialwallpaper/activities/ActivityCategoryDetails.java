@@ -41,6 +41,11 @@ import com.app.materialwallpaper.utils.Constant;
 import com.app.materialwallpaper.utils.Tools;
 import com.app.materialwallpaper.view.CustomFilterDropDown;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +76,7 @@ public class ActivityCategoryDetails extends AppCompatActivity {
     private final boolean isLastPage = false;
     private final List<Wallpaper> wallpaperList = new ArrayList<>();
     private final int PAGE_SIZE = 2000;
+    private AdView adView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +101,8 @@ public class ActivityCategoryDetails extends AppCompatActivity {
         Constant.LAST_SELECTED_ITEM_POSITION = 0;
 
         adsManager = new AdsManager(this);
-        adsManager.loadBannerAd(adsPref.getBannerAdStatusCategoryDetail());
-        adsManager.loadInterstitialAd(adsPref.getInterstitialAdClickWallpaper(), adsPref.getInterstitialAdInterval());
+//        adsManager.loadBannerAd(adsPref.getBannerAdStatusCategoryDetail());
+//        adsManager.loadInterstitialAd(adsPref.getInterstitialAdClickWallpaper(), adsPref.getInterstitialAdInterval());
 
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.color_light_primary);
@@ -156,6 +162,23 @@ public class ActivityCategoryDetails extends AppCompatActivity {
         requestAction(currentPage);
         setupToolbar();
         onOptionMenuClicked();
+        // Initialize AdMob
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+                // Initialization is complete. You can now request ads.
+                loadBannerAd();
+            }
+        });
+
+        // Load banner ad
+        loadBannerAd();
+    }
+
+    private void loadBannerAd() {
+        adView = findViewById(R.id.adView);  // Make sure to replace with your AdView ID
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
     }
     private int getFirstVisibleItem(int[] positions) {
         int firstVisibleItem = positions[0];
@@ -452,11 +475,15 @@ public class ActivityCategoryDetails extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
+        if (adView != null) {
+            adView.destroy();
+        }
         super.onDestroy();
         swipeProgress(false);
         if (callbackCall != null && callbackCall.isExecuted()) {
             callbackCall.cancel();
         }
+
         lytShimmer.stopShimmer();
         adsManager.destroyBannerAd();
     }

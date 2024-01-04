@@ -39,10 +39,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.multidex.BuildConfig;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.app.materialwallpaper.BuildConfig;
+//import com.app.materialwallpaper.BuildConfig;
 import com.app.materialwallpaper.Config;
 import com.app.materialwallpaper.R;
 import com.app.materialwallpaper.adapters.AdapterTags;
@@ -62,6 +63,11 @@ import com.dingmouren.videowallpaper.VideoWallpaper;
 import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
@@ -80,6 +86,7 @@ public class ActivityWallpaperDetail extends AppCompatActivity {
     SharedPref sharedPref;
     DBHelper dbHelper;
     AdsPref adsPref;
+    private AdView adView;
     boolean flag = true;
     LinearLayout lytBottom;
     RelativeLayout bgShadowTop;
@@ -127,16 +134,54 @@ public class ActivityWallpaperDetail extends AppCompatActivity {
         setupViewPager(Constant.wallpapers);
 
         adsManager = new AdsManager(this);
-        adsManager.loadBannerAd(adsPref.getBannerAdStatusDetail());
-        adsManager.loadInterstitialAd(adsPref.getInterstitialAdDetail(), 1);
+//        adsManager.loadBannerAd(adsPref.getBannerAdStatusDetail());
+//        adsManager.loadInterstitialAd(adsPref.getInterstitialAdDetail(), 1);
 
+        // Initialize AdMob
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+                // Initialization is complete. You can now request ads.
+                loadBannerAd();
+            }
+        });
+
+        // Load banner ad
+        loadBannerAd();
+    }
+
+
+
+
+
+
+
+
+    private void loadBannerAd() {
+        adView = findViewById(R.id.adView);  // Make sure to replace with your AdView ID
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (adView != null) {
+            adView.destroy();
+        }
+        super.onDestroy();
     }
 
     public void setupViewPager(final List<Wallpaper> wallpapers) {
         viewPager2 = findViewById(R.id.view_pager2);
         adapterWallpaperDetail = new AdapterWallpaperDetail(this, wallpapers);
         viewPager2.setAdapter(adapterWallpaperDetail);
-        viewPager2.setOffscreenPageLimit(wallpapers.size());
+
+//        viewPager2.setOffscreenPageLimit(wallpapers.size());
+
+        //added on 10/24/203 by hasnain to remove crash above code is pevious one comment out
+        viewPager2.setOffscreenPageLimit(1); // Or any value greater than 0, depending on your requirements
+
+
         viewPager2.setCurrentItem(Constant.position, false);
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -651,14 +696,14 @@ public class ActivityWallpaperDetail extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        adsManager.resumeBannerAd(adsPref.getBannerAdStatusDetail());
+//        adsManager.resumeBannerAd(adsPref.getBannerAdStatusDetail());
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        adsManager.destroyBannerAd();
-    }
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        adsManager.destroyBannerAd();
+//    }
 
     private void hideSystemUI() {
         // Enables regular immersive mode.

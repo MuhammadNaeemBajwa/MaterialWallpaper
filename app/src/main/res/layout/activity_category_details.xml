@@ -9,7 +9,7 @@
         android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bannerAdView"
+        android:layout_above="@id/adView"
         android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.AppBarLayout
@@ -176,14 +176,22 @@
     <com.app.materialwallpaper.view.HorizontalPagingIndicator
         android:id="@+id/pageNavigator" android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_above="@+id/bannerAdView"
+        android:layout_above="@+id/adView"
         android:layout_height="wrap_content">
     </com.app.materialwallpaper.view.HorizontalPagingIndicator>
-    <com.solodroid.ads.sdk.ui.BannerAdView
-        android:id="@+id/bannerAdView"
+<!--    <com.solodroid.ads.sdk.ui.BannerAdView-->
+<!--        android:id="@+id/bannerAdView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentBottom="true" />-->
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
+        app:adSize="SMART_BANNER"
+        android:layout_alignParentBottom="true"
+        app:adUnitId="ca-app-pub-4564681694529671/5598680498" />
 
 </RelativeLayout>
 

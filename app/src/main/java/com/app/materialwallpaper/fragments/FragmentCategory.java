@@ -107,8 +107,8 @@ public class FragmentCategory extends Fragment {
             intent.putExtra(EXTRA_OBJC, obj);
             startActivity(intent);
 
-            ((MainActivity) activity).showInterstitialAd();
-            ((MainActivity) activity).destroyBannerAd();
+//            ((MainActivity) activity).showInterstitialAd();
+//            ((MainActivity) activity).destroyBannerAd();
         });
 
         // on swipe list

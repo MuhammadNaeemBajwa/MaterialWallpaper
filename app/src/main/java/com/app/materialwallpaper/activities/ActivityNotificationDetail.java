@@ -65,6 +65,11 @@ import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
@@ -81,6 +86,7 @@ public class ActivityNotificationDetail extends AppCompatActivity {
     Wallpaper wallpaper;
     Toolbar toolbar;
     ActionBar actionBar;
+    private AdView adView;
     private String singleChoiceSelected;
     CoordinatorLayout parentView;
     private BottomSheetDialog mBottomSheetDialog;
@@ -125,9 +131,26 @@ public class ActivityNotificationDetail extends AppCompatActivity {
         requestWallpaperDetail();
 
         adsManager = new AdsManager(this);
-        adsManager.loadBannerAd(adsPref.getBannerAdStatusDetail());
-        adsManager.loadInterstitialAd(adsPref.getInterstitialAdDetail(), 1);
+//        adsManager.loadBannerAd(adsPref.getBannerAdStatusDetail());
+//        adsManager.loadInterstitialAd(adsPref.getInterstitialAdDetail(), 1);
 
+        // Initialize AdMob
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+                // Initialization is complete. You can now request ads.
+                loadBannerAd();
+            }
+        });
+
+        // Load banner ad
+        loadBannerAd();
+    }
+
+    private void loadBannerAd() {
+        adView = findViewById(R.id.adView);  // Make sure to replace with your AdView ID
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
     }
 
     private void requestWallpaperDetail() {
@@ -591,6 +614,9 @@ public class ActivityNotificationDetail extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        if (adView != null) {
+            adView.destroy();
+        }
         super.onDestroy();
     }
 

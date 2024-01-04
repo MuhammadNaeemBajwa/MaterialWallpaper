@@ -44,6 +44,11 @@ import com.app.materialwallpaper.fragments.FragmentTabLayout;
 import com.app.materialwallpaper.utils.AdsManager;
 import com.app.materialwallpaper.utils.Constant;
 import com.app.materialwallpaper.utils.Tools;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomnavigation.LabelVisibilityMode;
@@ -75,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     SharedPref sharedPref;
     RelativeLayout bgLine;
+    private AdView adView;
     AdsManager adsManager;
     LinearLayout viewBannerAd;
     private AppUpdateManager appUpdateManager;
@@ -100,10 +106,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         adsManager = new AdsManager(this);
-        adsManager.initializeAd();
-        adsManager.updateConsentStatus();
-        adsManager.loadBannerAd(adsPref.getBannerAdStatusHome());
-        adsManager.loadInterstitialAd(adsPref.getInterstitialAdClickWallpaper(), adsPref.getInterstitialAdInterval());
+//        adsManager.initializeAd();
+//        adsManager.updateConsentStatus();
+//        adsManager.loadBannerAd(adsPref.getBannerAdStatusHome());
+//        adsManager.loadInterstitialAd(adsPref.getInterstitialAdClickWallpaper(), adsPref.getInterstitialAdInterval());
 
         Tools.getRtlDirection(this);
         coordinatorLayout = findViewById(R.id.coordinatorLayout);
@@ -143,6 +149,33 @@ public class MainActivity extends AppCompatActivity {
             inAppReview();
         }
 
+
+        // Initialize AdMob
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+                // Initialization is complete. You can now request ads.
+                loadBannerAd();
+            }
+        });
+
+        // Load banner ad
+        loadBannerAd();
+
+    }
+    private void loadBannerAd() {
+        adView = findViewById(R.id.adView);  // Make sure to replace with your AdView ID
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (adView != null) {
+            adView.destroy();
+        }
+        super.onDestroy();
+        Constant.isAppOpen = false;
     }
 
 
@@ -629,12 +662,12 @@ public class MainActivity extends AppCompatActivity {
         alert.show();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        destroyBannerAd();
-        Constant.isAppOpen = false;
-    }
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        destroyBannerAd();
+//        Constant.isAppOpen = false;
+//    }
 
     @Override
     protected void onResume() {

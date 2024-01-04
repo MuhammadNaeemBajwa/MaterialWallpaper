@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 
@@ -153,12 +154,36 @@ public class DBHelper extends SQLiteOpenHelper {
         getAllCategory(table);
     }
 
-    public void addListWallpaper(List<Wallpaper> wallpapers, String table) {
-        for (Wallpaper wallpaper : wallpapers) {
-            addOneWallpaper(db, wallpaper, table);
-        }
-        getAllWallpaper(table);
+//    public void addListWallpaper(List<Wallpaper> wallpapers, String table) {
+//        for (Wallpaper wallpaper : wallpapers) {
+////            addOneWallpaper(db, wallpaper, table);
+//
+//            // added on 10/24/2023  by hasnain to remove the ANR issue in the crash rate comment out the above function
+//            addOneWallpaper(wallpaper, table);
+//        }
+//        getAllWallpaper(table);
+//    }
+
+
+    // added on 10/24/2023 to resolve ANR comment out the above code
+    public void addListWallpaper(final List<Wallpaper> wallpapers, final String table) {
+        new AsyncTask<List<Wallpaper>, Void, Void>() {
+            @Override
+            protected Void doInBackground(List<Wallpaper>... params) {
+                for (Wallpaper wallpaper : params[0]) {
+                    addOneWallpaper(wallpaper, table);
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                getAllWallpaper(table);
+            }
+        }.execute(wallpapers);
     }
+
 
     public void addOneCategory(SQLiteDatabase db, Category category, String table) {
         ContentValues values = new ContentValues();
@@ -169,26 +194,59 @@ public class DBHelper extends SQLiteOpenHelper {
         db.insert(table, null, values);
     }
 
-    public void addOneWallpaper(SQLiteDatabase db, Wallpaper wallpaper, String table) {
-        ContentValues values = new ContentValues();
-        values.put(IMAGE_ID, wallpaper.image_id);
-        values.put(IMAGE_NAME, wallpaper.image_name);
-        values.put(IMAGE_UPLOAD, wallpaper.image_upload);
-        values.put(IMAGE_URL, wallpaper.image_url);
-        values.put(IMAGE_THUMB, wallpaper.image_thumb);
-        values.put(TYPE, wallpaper.type);
-        values.put(RESOLUTION, wallpaper.resolution);
-        values.put(SIZE, wallpaper.size);
-        values.put(MIME, wallpaper.mime);
-        values.put(VIEWS, wallpaper.views);
-        values.put(DOWNLOADS, wallpaper.downloads);
-        values.put(FEATURED, wallpaper.featured);
-        values.put(TAGS, wallpaper.tags);
-        values.put(CATEGORY_ID, wallpaper.category_id);
-        values.put(CATEGORY_NAME, wallpaper.category_name);
-        values.put(LAST_UPDATE, wallpaper.last_update);
-        db.insert(table, null, values);
+//    public void addOneWallpaper(SQLiteDatabase db, Wallpaper wallpaper, String table) {
+//        ContentValues values = new ContentValues();
+//        values.put(IMAGE_ID, wallpaper.image_id);
+//        values.put(IMAGE_NAME, wallpaper.image_name);
+//        values.put(IMAGE_UPLOAD, wallpaper.image_upload);
+//        values.put(IMAGE_URL, wallpaper.image_url);
+//        values.put(IMAGE_THUMB, wallpaper.image_thumb);
+//        values.put(TYPE, wallpaper.type);
+//        values.put(RESOLUTION, wallpaper.resolution);
+//        values.put(SIZE, wallpaper.size);
+//        values.put(MIME, wallpaper.mime);
+//        values.put(VIEWS, wallpaper.views);
+//        values.put(DOWNLOADS, wallpaper.downloads);
+//        values.put(FEATURED, wallpaper.featured);
+//        values.put(TAGS, wallpaper.tags);
+//        values.put(CATEGORY_ID, wallpaper.category_id);
+//        values.put(CATEGORY_NAME, wallpaper.category_name);
+//        values.put(LAST_UPDATE, wallpaper.last_update);
+//        db.insert(table, null, values);
+//    }
+
+
+
+
+// added on 10/24/2023  by hasnain to remove the ANR issue in the crash rate comment out the above function
+    public void addOneWallpaper(final Wallpaper wallpaper, final String table) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                ContentValues values = new ContentValues();
+                values.put(IMAGE_ID, wallpaper.image_id);
+                values.put(IMAGE_NAME, wallpaper.image_name);
+                values.put(IMAGE_UPLOAD, wallpaper.image_upload);
+                values.put(IMAGE_URL, wallpaper.image_url);
+                values.put(IMAGE_THUMB, wallpaper.image_thumb);
+                values.put(TYPE, wallpaper.type);
+                values.put(RESOLUTION, wallpaper.resolution);
+                values.put(SIZE, wallpaper.size);
+                values.put(MIME, wallpaper.mime);
+                values.put(VIEWS, wallpaper.views);
+                values.put(DOWNLOADS, wallpaper.downloads);
+                values.put(FEATURED, wallpaper.featured);
+                values.put(TAGS, wallpaper.tags);
+                values.put(CATEGORY_ID, wallpaper.category_id);
+                values.put(CATEGORY_NAME, wallpaper.category_name);
+                values.put(LAST_UPDATE, wallpaper.last_update);
+                db.insert(table, null, values);
+                return null;
+            }
+        }.execute();
     }
+
+
 
     public void addOneFavorite(Wallpaper wallpaper) {
         ContentValues values = new ContentValues();

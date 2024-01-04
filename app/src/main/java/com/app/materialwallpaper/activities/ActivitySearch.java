@@ -64,6 +64,11 @@ import com.app.materialwallpaper.utils.Tools;
 import com.app.materialwallpaper.view.HorizontalPagingIndicator;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.datatransport.runtime.firebase.transport.LogEventDropped;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
@@ -94,6 +99,7 @@ public class ActivitySearch extends AppCompatActivity {
     Call<CallbackWallpaper> callbackCallWallpaper = null;
     Call<CallbackCategory> callbackCallCategory = null;
     String tags = "";
+    private AdView adView;
     List<Wallpaper> wallpapers = new ArrayList<>();
     List<Category> categories = new ArrayList<>();
     SharedPref sharedPref;
@@ -109,7 +115,7 @@ public class ActivitySearch extends AppCompatActivity {
     private boolean isLoading = false;
     private final boolean isLastPage = false;
     private final List<Wallpaper> wallpaperList = new ArrayList<>();
-    private final int PAGE_SIZE = 50;
+    private final int PAGE_SIZE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,8 +136,26 @@ public class ActivitySearch extends AppCompatActivity {
 
 
         adsManager = new AdsManager(this);
-        adsManager.loadBannerAd(adsPref.getBannerAdStatusSearch());
-        adsManager.loadInterstitialAd(adsPref.getInterstitialAdClickWallpaper(), adsPref.getInterstitialAdInterval());
+//        adsManager.loadBannerAd(adsPref.getBannerAdStatusSearch());
+//        adsManager.loadInterstitialAd(adsPref.getInterstitialAdClickWallpaper(), adsPref.getInterstitialAdInterval());
+
+        // Initialize AdMob
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+                // Initialization is complete. You can now request ads.
+                loadBannerAd();
+            }
+        });
+
+        // Load banner ad
+        loadBannerAd();
+    }
+
+    private void loadBannerAd() {
+        adView = findViewById(R.id.adView);  // Make sure to replace with your AdView ID
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -804,10 +828,19 @@ public class ActivitySearch extends AppCompatActivity {
         adsManager.resumeBannerAd(adsPref.getBannerAdStatusSearch());
     }
 
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        adsManager.destroyBannerAd();
+//    }
+
+
     @Override
     protected void onDestroy() {
+        if (adView != null) {
+            adView.destroy();
+        }
         super.onDestroy();
-        adsManager.destroyBannerAd();
     }
 
 }
