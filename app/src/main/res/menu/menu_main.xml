@@ -42,6 +42,14 @@
                     android:id="@+id/menu_about"
                     android:title="@string/menu_overflow_about"
                     android:visible="true" />
+                <item
+                    android:id="@+id/submit_wallpaper"
+                    android:title="@string/submit_wallpaper"
+                    android:visible="true" />
+                <item
+                    android:id="@+id/contact"
+                    android:title="@string/contact"
+                    android:visible="true" />
 
             </group>
 

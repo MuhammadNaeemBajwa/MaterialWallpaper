@@ -71,6 +71,7 @@ public class FragmentWallpaper2 extends Fragment {
     private SharedPref sharedPref;
     String order, filter;
     DBHelper dbHelper;
+
     AdsManager adsManager;
     Activity activity;
     private int currentPage = 1;
@@ -263,7 +264,12 @@ public class FragmentWallpaper2 extends Fragment {
         } else {
             WALLPAPER_PER_PAGE = Constant.LOAD_MORE_2_COLUMNS;
         }
-        dbHelper = new DBHelper(activity);
+        //
+//        dbHelper = new DBHelper(activity);
+        //addded on 24 jan -2024 to remove this crash
+        // Exception android.database.sqlite.SQLiteDatabaseLockedException: database is locked (code 5 SQLITE_BUSY)
+        dbHelper = DBHelper.getInstance(activity);
+        //
         adsManager = new AdsManager(activity);
 
         lytShimmer = rootView.findViewById(R.id.shimmer_view_container);

@@ -9,11 +9,14 @@ import static com.app.materialwallpaper.utils.Constant.wallpapers;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,8 +30,10 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -112,6 +117,7 @@ public class ActivityWallpaperDetail extends AppCompatActivity {
             Tools.transparentStatusBarNavigation(this);
         }
         setContentView(R.layout.activity_wallpaper_detail);
+
 
         if (!BuildConfig.DEBUG) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
@@ -468,32 +474,62 @@ public class ActivityWallpaperDetail extends AppCompatActivity {
         }
 
         ((TextView) view.findViewById(R.id.txt_category_name)).setText(wallpaper.category_name);
+        ((ImageView) view.findViewById(R.id.flag)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Dialog reportDialog = new Dialog(ActivityWallpaperDetail.this);
 
-//        if (wallpaper.resolution.equals("0")) {
-//            ((TextView) view.findViewById(R.id.txt_resolution)).setText("-");
-//        } else {
-//            ((TextView) view.findViewById(R.id.txt_resolution)).setText(wallpaper.resolution);
-//        }
+                reportDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                reportDialog.setContentView(R.layout.dialog_flag_layout);
+                reportDialog.setTitle("Report Content");
+                // Initialize RadioGroup here
+                RadioGroup radioGroupReport = reportDialog.findViewById(R.id.radio_group_report);
+
+                // Access the wallpaper object or its name
+                Wallpaper wallpaper = wallpapers.get(viewPager2.getCurrentItem());
+                TextView nameEnter = reportDialog.findViewById(R.id.name_enter);
+                nameEnter.setText(wallpaper.image_name);
+
+                TextView btnCancel = reportDialog.findViewById(R.id.button_cancel);
+                TextView btnReport = reportDialog.findViewById(R.id.report_TV);
+
+                btnReport.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
 //
-//        if (wallpaper.size.equals("0")) {
-//            ((TextView) view.findViewById(R.id.txt_size)).setText("-");
-//        } else {
-//            ((TextView) view.findViewById(R.id.txt_size)).setText(wallpaper.size);
-//        }
-//
-//        if (wallpaper.mime.equals("")) {
-//            ((TextView) view.findViewById(R.id.txt_mime_type)).setText("image/jpeg");
-//        } else {
-//            if (wallpaper.mime.contains("octet-stream")) {
-//                ((TextView) view.findViewById(R.id.txt_mime_type)).setText("video/mp4");
-//            } else {
-//                ((TextView) view.findViewById(R.id.txt_mime_type)).setText(wallpaper.mime);
-//            }
-//        }
+                        int selectedId = radioGroupReport.getCheckedRadioButtonId();
 
-//        ((TextView) view.findViewById(R.id.txt_view_count)).setText(Tools.withSuffix(wallpaper.views) + "");
-//        ((TextView) view.findViewById(R.id.txt_download_count)).setText(Tools.withSuffix(wallpaper.downloads) + "");
+                        // If no option is selected, do nothing
+                        if (selectedId == -1) {
+                            Toast.makeText(getApplicationContext(), "Please select an option", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
+                        // Check which radio button was clicked
+                        switch (selectedId) {
+                            case R.id.radio_sexually_explicit:
+                            case R.id.radio_offensive:
+                            case R.id.radio_not_of_public_interest:
+                            case R.id.radio_bad_quality:
+                                // Show second dialog here
+                                showSecondDialog();
+                                break;
+                            case R.id.radio_copyrighted:
+                                // Do nothing or close the dialog
+                                break;
+                        }
+                        reportDialog.dismiss();
+                    }
+                });
+                btnCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        reportDialog.dismiss();
+                    }
+                });
+                reportDialog.show();
+            }
+        });
         LinearLayout lyt_tags = view.findViewById(R.id.lyt_tags);
         if (wallpaper.tags.equals("")) {
             lyt_tags.setVisibility(View.GONE);
@@ -543,6 +579,21 @@ public class ActivityWallpaperDetail extends AppCompatActivity {
 
         mBottomSheetDialog.show();
         mBottomSheetDialog.setOnDismissListener(dialog -> mBottomSheetDialog = null);
+    }
+
+    private void showSecondDialog(){
+        Dialog reportDialog = new Dialog(ActivityWallpaperDetail.this);
+        reportDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        reportDialog.setContentView(R.layout.dialog_thank_you);
+
+        TextView buttonClose = reportDialog.findViewById(R.id.buttonClose);
+        buttonClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                reportDialog.dismiss();
+            }
+        });
+        reportDialog.show();
     }
 
     @TargetApi(Build.VERSION_CODES.N)
@@ -706,9 +757,6 @@ public class ActivityWallpaperDetail extends AppCompatActivity {
 //    }
 
     private void hideSystemUI() {
-        // Enables regular immersive mode.
-        // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
-        // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE
@@ -721,5 +769,6 @@ public class ActivityWallpaperDetail extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
+
 
 }

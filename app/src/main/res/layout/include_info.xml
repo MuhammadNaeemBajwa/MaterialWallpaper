@@ -14,15 +14,33 @@
         android:layout_margin="10dp"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:text="@string/txt_title_info"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:layout_margin="10dp">
+
+            <TextView
+                android:id="@+id/txt_title_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:text="@string/txt_title_info"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/flag"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/baseline_flag_24"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"/>
+
+        </RelativeLayout>
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -83,141 +101,89 @@
 
             </LinearLayout>
 
-<!--            <LinearLayout-->
-<!--                android:id="@+id/lyt_resolution"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:padding="10dp"-->
-<!--                android:weightSum="1">-->
 
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="0.35"-->
-<!--                    android:gravity="start"-->
-<!--                    android:text="@string/txt_info_resolution"-->
-<!--                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"-->
-<!--                    android:textSize="16sp" />-->
 
-<!--                <TextView-->
-<!--                    android:id="@+id/txt_resolution"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="0.65"-->
-<!--                    android:text=""-->
-<!--                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"-->
-<!--                    android:textSize="16sp" />-->
 
-<!--            </LinearLayout>-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:weightSum="1">
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:padding="10dp"-->
-<!--                android:weightSum="1">-->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.35"
+                    android:gravity="start"
+                    android:text="@string/id"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                    android:textSize="16sp" />
 
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="0.35"-->
-<!--                    android:gravity="start"-->
-<!--                    android:text="@string/txt_info_size"-->
-<!--                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"-->
-<!--                    android:textSize="16sp" />-->
+                <TextView
+                    android:id="@+id/text_id"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.65"
+                    android:text=""
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                    android:textSize="16sp" />
 
-<!--                <TextView-->
-<!--                    android:id="@+id/txt_size"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="0.65"-->
-<!--                    android:text=""-->
-<!--                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"-->
-<!--                    android:textSize="16sp" />-->
+            </LinearLayout>
 
-<!--            </LinearLayout>-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:weightSum="1">
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:padding="10dp"-->
-<!--                android:weightSum="1">-->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.35"
+                    android:gravity="start"
+                    android:text="@string/submitted_by"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                    android:textSize="16sp" />
 
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="0.35"-->
-<!--                    android:gravity="start"-->
-<!--                    android:text="@string/txt_info_type"-->
-<!--                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"-->
-<!--                    android:textSize="16sp" />-->
+                <TextView
+                    android:id="@+id/text_submitted_by"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.65"
+                    android:text=""
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                    android:textSize="16sp" />
 
-<!--                <TextView-->
-<!--                    android:id="@+id/txt_mime_type"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="0.65"-->
-<!--                    android:text=""-->
-<!--                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"-->
-<!--                    android:textSize="16sp" />-->
+            </LinearLayout>
 
-<!--            </LinearLayout>-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:weightSum="1">
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:padding="10dp"-->
-<!--                android:weightSum="1">-->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.35"
+                    android:gravity="start"
+                    android:text="@string/credit_to"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                    android:textSize="16sp" />
 
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="0.35"-->
-<!--                    android:gravity="start"-->
-<!--                    android:text="@string/txt_info_views"-->
-<!--                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"-->
-<!--                    android:textSize="16sp" />-->
+                <TextView
+                    android:id="@+id/text_credit_to"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.65"
+                    android:text=""
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                    android:textSize="16sp" />
 
-<!--                <TextView-->
-<!--                    android:id="@+id/txt_view_count"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="0.65"-->
-<!--                    android:text=""-->
-<!--                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"-->
-<!--                    android:textSize="16sp" />-->
-
-<!--            </LinearLayout>-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:padding="10dp"-->
-<!--                android:weightSum="1">-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="0.35"-->
-<!--                    android:gravity="start"-->
-<!--                    android:text="@string/txt_info_downloads"-->
-<!--                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"-->
-<!--                    android:textSize="16sp" />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/txt_download_count"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="0.65"-->
-<!--                    android:text=""-->
-<!--                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"-->
-<!--                    android:textSize="16sp" />-->
-
-<!--            </LinearLayout>-->
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -247,7 +213,6 @@
                 android:id="@+id/recycler_view_tags"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-
 
         </LinearLayout>
 

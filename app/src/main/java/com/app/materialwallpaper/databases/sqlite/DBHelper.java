@@ -55,12 +55,25 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TOTAL_WALLPAPER = "total_wallpaper";
     public static final String LAST_UPDATE = "last_update";
 
+    //addded on 24 jan -2024
+    private static DBHelper instance;
+
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
         this.db = this.getWritableDatabase();
         Log.d("DB", "Constructor");
     }
+
+    //addded on 24 jan -2024 to remove this crash
+    //Exception android.database.sqlite.SQLiteDatabaseLockedException: database is locked (code 5 SQLITE_BUSY)
+    public static synchronized DBHelper getInstance(Context context) {
+        if (instance == null) {
+            instance = new DBHelper(context.getApplicationContext());
+        }
+        return instance;
+    }
+    //
 
     @Override
     public void onCreate(SQLiteDatabase db) {

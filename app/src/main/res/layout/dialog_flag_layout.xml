@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:background="@drawable/rounded_dialog_background">
+
+    <TextView
+        android:id="@+id/textViewReportContent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Report Content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/color_black"
+        android:textSize="@dimen/_14sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/name_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Name:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/gnt_gray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewReportContent" />
+
+    <TextView
+        android:id="@+id/name_enter"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text=""
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/gnt_gray"
+        app:layout_constraintBottom_toBottomOf="@+id/name_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/name_tv"
+        app:layout_constraintTop_toBottomOf="@+id/textViewReportContent" />
+
+    <TextView
+        android:id="@+id/id_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="ID:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/gnt_gray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name_tv" />
+
+    <TextView
+        android:id="@+id/id_enter"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="34567899"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/gnt_gray"
+        app:layout_constraintBottom_toBottomOf="@+id/id_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/id_tv"
+        app:layout_constraintTop_toBottomOf="@+id/name_tv" />
+
+    <RadioGroup
+        android:id="@+id/radio_group_report"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/id_tv">
+
+        <RadioButton
+            android:id="@+id/radio_sexually_explicit"
+            style="@style/CustomRadioButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="@color/color_black"
+            android:paddingStart="16dp"
+            android:text="Sexually explicit" />
+
+        <RadioButton
+            android:id="@+id/radio_offensive"
+            style="@style/CustomRadioButton"
+            android:layout_width="match_parent"
+            android:textStyle="bold"
+            android:textColor="@color/color_black"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:text="Offensive" />
+
+        <RadioButton
+            android:id="@+id/radio_not_of_public_interest"
+            style="@style/CustomRadioButton"
+            android:layout_width="match_parent"
+            android:textStyle="bold"
+            android:textColor="@color/color_black"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:text="Not of public interest" />
+
+        <RadioButton
+            android:id="@+id/radio_bad_quality"
+            style="@style/CustomRadioButton"
+            android:layout_width="match_parent"
+            android:textStyle="bold"
+            android:textColor="@color/color_black"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:text="Bad quality" />
+
+        <RadioButton
+            android:id="@+id/radio_copyrighted"
+            style="@style/CustomRadioButton"
+            android:layout_width="match_parent"
+            android:textStyle="bold"
+            android:textColor="@color/color_black"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:text="Copyrighted" />
+    </RadioGroup>
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/button_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/cancel_background"
+        android:paddingLeft="@dimen/_24sdp"
+        android:paddingTop="@dimen/_8sdp"
+        android:paddingRight="@dimen/_24sdp"
+        android:paddingBottom="@dimen/_8sdp"
+        android:text="Cancel"
+        android:textColor="@color/color_black"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/view3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/radio_group_report" />
+
+    <TextView
+        android:id="@+id/report_TV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/report_item_background"
+        android:paddingLeft="@dimen/_16sdp"
+        android:paddingTop="@dimen/_8sdp"
+        android:paddingRight="@dimen/_16sdp"
+        android:paddingBottom="@dimen/_8sdp"
+        android:text="Report Item"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/view3"
+        app:layout_constraintTop_toBottomOf="@id/radio_group_report" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

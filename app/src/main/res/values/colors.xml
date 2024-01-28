@@ -20,6 +20,8 @@
 
     <color name="color_light_text_default">#292929</color>
     <color name="color_dark_text_default">#BDC0C3</color>
+    <color name="cancel_gray">#D2D2D2</color>
+    <color name="red">#FF0601</color>
 
     <!--other-->
     <color name="color_black">#000000</color>

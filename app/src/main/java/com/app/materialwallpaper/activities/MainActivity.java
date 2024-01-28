@@ -646,6 +646,10 @@ public class MainActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.menu_about) {
             aboutDialog();
         }
+
+        else if (item.getItemId() == R.id.contact) {
+            contactDialog();
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -655,6 +659,19 @@ public class MainActivity extends AppCompatActivity {
 
         TextView txt_app_version = view.findViewById(R.id.txt_app_version);
         txt_app_version.setText(getString(R.string.msg_about_version) + " " + BuildConfig.VERSION_NAME);
+
+        final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+        alert.setView(view);
+        alert.setPositiveButton(R.string.dialog_option_ok, (dialog, which) -> dialog.dismiss());
+        alert.show();
+    }
+
+    public void contactDialog() {
+        LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
+        View view = inflater.inflate(R.layout.dialog_setting_contact, null);
+
+
+
 
         final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
         alert.setView(view);
