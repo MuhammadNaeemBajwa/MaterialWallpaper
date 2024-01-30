@@ -153,10 +153,19 @@ public class ActivitySearch extends AppCompatActivity {
     }
 
     private void loadBannerAd() {
-        adView = findViewById(R.id.adView);  // Make sure to replace with your AdView ID
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
+        if (!MyApplication.getApp().isPremium()) {
+            adView = findViewById(R.id.adView);  // Make sure to replace with your AdView ID
+            AdRequest adRequest = new AdRequest.Builder().build();
+            adView.loadAd(adRequest);
+        } else {
+            // Optionally hide the AdView or make it invisible if the user is premium
+            AdView adView = findViewById(R.id.adView);
+            if (adView != null) {
+                adView.setVisibility(View.GONE);
+            }
+        }
     }
+
 
     @SuppressLint("ClickableViewAccessibility")
     private void initComponent() {

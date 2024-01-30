@@ -125,7 +125,6 @@ public class ActivityCategoryDetails extends AppCompatActivity {
             Constant.position = position;
 
             if (Constant.wallpapers.get(position).isPremium() && !MyApplication.getApp().isPremium()) {
-//                BuyPremiumActivity.start(ActivityCategoryDetails.this, null);
                 VideoAd.start(ActivityCategoryDetails.this, null);
 
             } else {
@@ -176,10 +175,19 @@ public class ActivityCategoryDetails extends AppCompatActivity {
     }
 
     private void loadBannerAd() {
-        adView = findViewById(R.id.adView);  // Make sure to replace with your AdView ID
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
+        if (!MyApplication.getApp().isPremium()) {
+            adView = findViewById(R.id.adView);  // Make sure to replace with your AdView ID
+            AdRequest adRequest = new AdRequest.Builder().build();
+            adView.loadAd(adRequest);
+        } else {
+            // Optionally hide the AdView or make it invisible if the user is premium
+            AdView adView = findViewById(R.id.adView);
+            if (adView != null) {
+                adView.setVisibility(View.GONE);
+            }
+        }
     }
+
     private int getFirstVisibleItem(int[] positions) {
         int firstVisibleItem = positions[0];
         for (int position : positions) {

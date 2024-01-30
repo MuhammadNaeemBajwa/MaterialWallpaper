@@ -82,7 +82,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ActivityNotificationDetail extends AppCompatActivity {
-
     Wallpaper wallpaper;
     Toolbar toolbar;
     ActionBar actionBar;
@@ -100,7 +99,6 @@ public class ActivityNotificationDetail extends AppCompatActivity {
     WallpaperHelper wallpaperHelper;
     ProgressDialog progressDialog;
     public ImageView videoThumbnail;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,20 +136,26 @@ public class ActivityNotificationDetail extends AppCompatActivity {
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
-                // Initialization is complete. You can now request ads.
                 loadBannerAd();
             }
         });
-
-        // Load banner ad
         loadBannerAd();
     }
 
     private void loadBannerAd() {
-        adView = findViewById(R.id.adView);  // Make sure to replace with your AdView ID
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
+        if (!MyApplication.getApp().isPremium()) {
+            adView = findViewById(R.id.adView);  // Make sure to replace with your AdView ID
+            AdRequest adRequest = new AdRequest.Builder().build();
+            adView.loadAd(adRequest);
+        } else {
+            // Optionally hide the AdView or make it invisible if the user is premium
+            AdView adView = findViewById(R.id.adView);
+            if (adView != null) {
+                adView.setVisibility(View.GONE);
+            }
+        }
     }
+
 
     private void requestWallpaperDetail() {
         callbackCall = RestAdapter.createAPI(sharedPref.getBaseUrl()).getOneWallpaper(wallpaperId);
@@ -397,30 +401,6 @@ public class ActivityNotificationDetail extends AppCompatActivity {
 
         ((TextView) view.findViewById(R.id.txt_category_name)).setText(wallpaper.category_name);
 
-//        if (wallpaper.resolution.equals("0")) {
-//            ((TextView) view.findViewById(R.id.txt_resolution)).setText("-");
-//        } else {
-//            ((TextView) view.findViewById(R.id.txt_resolution)).setText(wallpaper.resolution);
-//        }
-//
-//        if (wallpaper.size.equals("0")) {
-//            ((TextView) view.findViewById(R.id.txt_size)).setText("-");
-//        } else {
-//            ((TextView) view.findViewById(R.id.txt_size)).setText(wallpaper.size);
-//        }
-//
-//        if (wallpaper.mime.equals("")) {
-//            ((TextView) view.findViewById(R.id.txt_mime_type)).setText("image/jpeg");
-//        } else {
-//            if (wallpaper.mime.contains("octet-stream")) {
-//                ((TextView) view.findViewById(R.id.txt_mime_type)).setText("video/mp4");
-//            } else {
-//                ((TextView) view.findViewById(R.id.txt_mime_type)).setText(wallpaper.mime);
-//            }
-//        }
-//
-//        ((TextView) view.findViewById(R.id.txt_view_count)).setText(Tools.withSuffix(wallpaper.views) + "");
-//        ((TextView) view.findViewById(R.id.txt_download_count)).setText(Tools.withSuffix(wallpaper.downloads) + "");
 
         LinearLayout lyt_tags = view.findViewById(R.id.lyt_tags);
         if (wallpaper.tags.equals("")) {
@@ -621,18 +601,13 @@ public class ActivityNotificationDetail extends AppCompatActivity {
     }
 
     private void hideSystemUI() {
-        // Enables regular immersive mode.
-        // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
-        // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE
-                        // Set the content to appear under the system bars so that the
-                        // content doesn't resize when the system bars hide and show.
+
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        // Hide the nav bar and status bar
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }

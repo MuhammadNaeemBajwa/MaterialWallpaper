@@ -117,44 +117,6 @@ public class FragmentWallpaper2 extends Fragment {
         }
     }
 
-
-
-
-
-//    private void copyVideoToAppFolder(Uri videoUri) {
-//        try {
-//            InputStream inputStream = activity.getContentResolver().openInputStream(videoUri);
-//            if (inputStream != null) {
-//                File appVideosFolder = new File(activity.getCacheDir(), "videos");
-//                if (!appVideosFolder.exists()) {
-//                    appVideosFolder.mkdirs();
-//                }
-//                DocumentFile documentFile = DocumentFile.fromSingleUri(activity, videoUri);
-//                if (documentFile != null) {
-//                    String fileName = documentFile.getName();
-//                    assert fileName != null;
-//                    File copiedVideoFile = new File(appVideosFolder, fileName);
-//                    OutputStream outputStream = new FileOutputStream(copiedVideoFile);
-//
-//                    byte[] buffer = new byte[1024];
-//                    int bytesRead;
-//                    while ((bytesRead = inputStream.read(buffer)) != -1) {
-//                        outputStream.write(buffer, 0, bytesRead);
-//                    }
-//                    inputStream.close();
-//                    outputStream.close();
-//                    currentPage = 1;
-//                    showNoItemView(false);
-//                    loadLocalVideoFiles();
-////                    addVideoToSharedPreferences(copiedVideoFile.getAbsolutePath());
-//                }
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-
 // added on 10/11/2023 to remove crash
 
     private void copyVideoToAppFolder(Uri videoUri) {
@@ -620,27 +582,21 @@ public class FragmentWallpaper2 extends Fragment {
             }
         }
     }
-
     private void showShimmerLayout() {
         recyclerView.setVisibility(View.GONE);
         lytShimmer.setVisibility(View.VISIBLE);
         lytShimmer.startShimmer();
     }
-
     private void hideShimmerLayout() {
         recyclerView.setVisibility(View.VISIBLE);
         lytShimmer.setVisibility(View.GONE);
         lytShimmer.stopShimmer();
     }
-
     @Override
     public void onResume() {
         View filterDropDown = activity.findViewById(R.id.filterDropDown);
-
         if (filterDropDown != null)
             filterDropDown.setVisibility(isVideoWallpaperType() ? View.GONE : View.VISIBLE);
-
-
         super.onResume();
     }
 
